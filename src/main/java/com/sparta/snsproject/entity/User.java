@@ -28,7 +28,7 @@ public class User extends Timestamped{
     @Column(name="status", nullable = false, length = 100)
     private UserStatus status;
 
-    @Column(name="nickname", length = 100)
+    @Column(name="nickname", nullable = false, length = 100)
     private String nickname;
 
     @Column(name="introduce", length=100)
@@ -46,6 +46,7 @@ public class User extends Timestamped{
     public User(UserRequestDto requestDto) {
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
+        this.nickname = requestDto.getNickname();
         this.status = UserStatus.ABLED;
     }
 }

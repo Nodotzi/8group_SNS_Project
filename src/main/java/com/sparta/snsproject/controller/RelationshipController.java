@@ -1,9 +1,12 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
+import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 //친구 요청, 수락, 삭제와 관련된 페이지
 @RestController
@@ -40,6 +43,15 @@ public class RelationshipController {
     @DeleteMapping("/{friendA_id}/{friendB_id}")
     public RelationshipResponseDto deletedFriend(@PathVariable("friendA_id") Long friendA_id, @PathVariable("friendB_id") Long friendB_id) {
         return relationshipService.deletedFriend(friendA_id, friendB_id);
+    }
+    /**
+     * 요청받은 입장에서 요청한 유저들 목록
+     * @Param 요청 받은 유정 아이디
+     * @Return 요청한 유저 목록
+     * */
+    @GetMapping("/asked/{asked_id}")
+    public List<UserSimpleResponseDto> askedFriend(@PathVariable("asked_id") Long asked_id) {
+        return relationshipService.askedFriend(asked_id);
     }
 
 }

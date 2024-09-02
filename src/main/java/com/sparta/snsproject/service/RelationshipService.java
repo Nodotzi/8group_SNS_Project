@@ -1,6 +1,7 @@
 package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
+import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Relationship;
 import com.sparta.snsproject.entity.User;
@@ -10,6 +11,8 @@ import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,5 +77,15 @@ public class RelationshipService {
         friends =friendsRepository.findByFriendAIdAndFriendBId(friendBId, friendAId).orElseThrow(()->new NullPointerException("해당하는 친구가 존재하지 않습니다"));
         friendsRepository.delete(friends);
         return new RelationshipResponseDto(saveRelationship);
+    }
+
+    //요청받은 사람이 보는 요청한 유저 목록
+    public List<UserSimpleResponseDto> askedFriend(Long askedId) {
+        //요청 받은 사람이 askedId인 relationship 목록
+        List<Relationship> askingList = relationshipRepository.findAllByAskedId(askedId);
+        //리스트 속 각 relationship를 요청한 우저를 추출하고 UserSimpleResponseDto로 변환 -> 내보내기
+        return askingList.stream()
+                .map(Relationship::getAsking)
+                .map(UserSimpleResponseDto::new).toList();
     }
 }
