@@ -1,5 +1,6 @@
 package com.sparta.snsproject.config;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,10 +29,9 @@ public class JwtFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String url = httpRequest.getRequestURI();
-        String method = httpRequest.getMethod();
 
         // 특정 URL & HTTP 메서드에 대해 필터를 건너뛰도록 설정
-        if (url.startsWith("/api/sign") || url.startsWith("/auth")) {
+        if (url.equals("/api/signup") || url.startsWith("/auth")) {
             chain.doFilter(request, response);
             return;
         }
@@ -46,6 +46,14 @@ public class JwtFilter implements Filter {
         String jwt = jwtUtil.substringToken(bearerJwt);
 
         try {
+
+            // JWT 유효성 검사와 claims 추출
+            Claims claims = jwtUtil.extractClaims(jwt);
+
+            // 사용자 정보를 ArgumentResolver 로 넘기기 위해 HttpServletRequest 에 세팅
+            httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
+            httpRequest.setAttribute("email", claims.get("email", String.class));
+
             if (jwtUtil.validateToken(jwt)) {
                 chain.doFilter(request, response);
             } else {

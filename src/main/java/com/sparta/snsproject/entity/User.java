@@ -1,5 +1,6 @@
 package com.sparta.snsproject.entity;
 
+import com.sparta.snsproject.dto.SignupDto;
 import com.sparta.snsproject.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Friends> friendBs = new ArrayList<>();
 
-    public User(UserRequestDto requestDto, String password) {
+    public User(SignupDto requestDto, String password) {
         this.email = requestDto.getEmail();
         this.password = password;
         this.nickname = requestDto.getNickname();
@@ -51,4 +52,7 @@ public class User extends Timestamped{
         this.password = requestDto.getPassword();
     }
 
+    public void update() {
+        this.user_status = UserStatusEnum.DISABLE;
+    }
 }
