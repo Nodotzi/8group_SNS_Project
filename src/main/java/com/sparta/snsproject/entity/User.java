@@ -28,7 +28,7 @@ public class User extends Timestamped{
     @Column(name="status", nullable = false, length = 100)
     private UserStatus status;
 
-    @Column(name="nickname", nullable = false, length = 100)
+    @Column(name="nickname", unique = true, length = 100)
     private String nickname;
 
     @Column(name="introduce", length=100)

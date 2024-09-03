@@ -2,6 +2,7 @@ package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
 import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
+import com.sparta.snsproject.entity.AskStatus;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Relationship;
 import com.sparta.snsproject.entity.User;
@@ -80,12 +81,23 @@ public class RelationshipService {
     }
 
     //요청받은 사람이 보는 요청한 유저 목록
-    public List<UserSimpleResponseDto> askedFriend(Long askedId) {
+    public List<UserSimpleResponseDto> askedFriendList(Long askedId) {
         //요청 받은 사람이 askedId인 relationship 목록
-        List<Relationship> askingList = relationshipRepository.findAllByAskedId(askedId);
-        //리스트 속 각 relationship를 요청한 우저를 추출하고 UserSimpleResponseDto로 변환 -> 내보내기
+        List<Relationship> askingList = relationshipRepository.findAllByAskedIdAndStatus(askedId, AskStatus.WAIT);
+        //리스트 속 각 relationship를 요청한 유저를 추출하고 UserSimpleResponseDto로 변환 -> 내보내기
         return askingList.stream()
                 .map(Relationship::getAsking)
+                .map(UserSimpleResponseDto::new).toList();
+    }
+
+    //내가 요청한 친구 목록
+    public List<UserSimpleResponseDto> askingFriendList(Long askingId) {
+        //relationship 데이터에서 asking_id가 askingId인 데이터 목록 찾기
+        List<Relationship> askedList = relationshipRepository.findAllByAskingIdAndStatus(askingId, AskStatus.WAIT);
+
+        //리스트 속 각 relationship를 요청받은 유저를 추출하고 UserSimpleResponseDto로 변환 -> 내보내기
+        return askedList.stream()
+                .map(Relationship::getAsked)
                 .map(UserSimpleResponseDto::new).toList();
     }
 }
