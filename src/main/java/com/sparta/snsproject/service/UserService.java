@@ -22,26 +22,27 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public UserSaveResponseDto createUser(UserRequestDto requestDto) {
-        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+    public UserResponseDto createUser(UserRequestDto requestDto) {
 
-        // RequestDto -> entity
-        User user = new User(
-                requestDto,
-                requestDto.getEmail(),
-                requestDto.getNickname(), //3Lay Arci 위반인가?
-                encodedPassword);
-        // DB저장
-        User savedUser = userRepository.save(user);
-        // Entity -> ResponseDto
+        boolean okemail = requestDto.getEmail().matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-z]+$");
+        boolean okpassword = requestDto.getPassword().matches("^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$");
 
-        String baererToken = jwtUtil.createToken(
-                savedUser.getId(),
-                savedUser.getNickname(),
-                savedUser.getEmail()
-        );
-        return new UserSaveResponseDto(baererToken);
+        if(okpassword && okemail) {
+            String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+
+            //User Entity의 email 설정이 unique라서 중복예외처리 생략
+
+            // RequestDto -> entity
+            User user = new User(requestDto, encodedPassword);
+
+            // DB저장
+            User savedUser = userRepository.save(user);
+            // Entity -> ResponseDto
+            return new UserResponseDto(savedUser);
+        }
+        else throw new IllegalArgumentException("회원가입 정보입력 양식을 만족하지않습니다.");
     }
+
     public List<UserResponseDto> getAllUser() {
         return userRepository.findAll().stream().map(UserResponseDto::new).collect(Collectors.toList());
     } // 메서드 이름으로 SQL 생성하는 Query Methods 기능.
@@ -60,13 +61,7 @@ public class UserService {
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
         );
     }
-    public Long deleteUser(Long id) {
-        //해당 유저가 DB에 존재하는지 확인
-        User user = findUser(id);
-        //유저 삭제
-        userRepository.delete(user);
-        return id;
-    }
+
     public UserResponseDto getUser(Long id) {
         User user = find(id);
         UserResponseDto responseDto = new UserResponseDto(user);

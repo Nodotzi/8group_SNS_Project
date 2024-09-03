@@ -1,13 +1,10 @@
 package com.sparta.snsproject.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-public class UserRequestDto {
-    private String nickname;
+public class LoginRequestDto {
     private String email;
     private String password;
-    private String introduce;
+    private String nickname;
 }

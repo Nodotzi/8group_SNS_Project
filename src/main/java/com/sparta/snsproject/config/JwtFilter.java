@@ -31,7 +31,7 @@ public class JwtFilter implements Filter {
         String method = httpRequest.getMethod();
 
         // 특정 URL & HTTP 메서드에 대해 필터를 건너뛰도록 설정
-        if ("POST".equalsIgnoreCase(method) && "/users".equals(url)) {
+        if (url.startsWith("/api/sign") || url.startsWith("/auth")) {
             chain.doFilter(request, response);
             return;
         }

@@ -18,18 +18,21 @@ public class User {
     private String email;
     @Column(nullable = false, length = 100)
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, length = 100)
-    private String status;
-    @Column(length = 100)
+    private UserStatusEnum user_status = UserStatusEnum.ABLE;
+
+    @Column(nullable = false, length = 100)
     private String nickname;
     @Column(length = 100)
     private String introduce;
 
-
-    public User(UserRequestDto requestDto, String email, String nickname, String password) {
+    public User(UserRequestDto requestDto, String password) {
         this.email = requestDto.getEmail();
         this.password = password;
-        this.nickname = nickname;
+        this.nickname = requestDto.getNickname();
+        this.introduce = requestDto.getIntroduce();
     }
     public void update(UserRequestDto requestDto){
         this.email = requestDto.getEmail();
