@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 public class UserResponseDto {
     private final String userId;
     private final String email;
-    //private final LocalDateTime createdAt;
-    //private final LocalDateTime modifiedAt;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime modifiedAt;
 
     //리스트 만들기
 
@@ -18,8 +18,8 @@ public class UserResponseDto {
     public UserResponseDto(User savedUser) {
         this.userId = String.valueOf(savedUser.getId());
         this.email = savedUser.getEmail();
-        //this.createdAt = savedUser.getCreatedAt();
-        //this.modifiedAt = savedUser.getModifiedAt();
+        this.createdAt = savedUser.getCreatedAt();
+        this.modifiedAt = savedUser.getModifiedAt();
     }
 
 
