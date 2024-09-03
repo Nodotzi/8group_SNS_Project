@@ -100,4 +100,11 @@ public class RelationshipService {
                 .map(Relationship::getAsked)
                 .map(UserSimpleResponseDto::new).toList();
     }
+
+    //친구 요청 삭제
+    public void cancleFriend(Long myId, Long friendId) {
+        Relationship relationship = relationshipRepository.findByAskingIdAndAskedId(myId, friendId).orElseThrow(()->new NullPointerException("친구신청한 기록이 없습니다."));
+        relationship.delete();
+        relationshipRepository.save(relationship);
+    }
 }

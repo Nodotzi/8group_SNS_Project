@@ -68,4 +68,9 @@ public class RelationshipController {
     public List<UserSimpleResponseDto> askingFriendList(@PathVariable("asking_id") Long asking_id) {
         return relationshipService.askingFriendList(asking_id);
     }
+
+    @PutMapping("/cancel/{my_id}/{friendId}")
+    public void cancelFriend(@PathVariable("my_id") Long my_id, @PathVariable("friendId") Long friendId) {
+        relationshipService.cancleFriend(my_id, friendId);
+    }
 }

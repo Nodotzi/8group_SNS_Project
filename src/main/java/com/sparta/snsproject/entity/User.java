@@ -6,10 +6,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor
-public class User {
+public class User extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +31,15 @@ public class User {
     private String nickname;
     @Column(length = 100)
     private String introduce;
+
+    @OneToMany(mappedBy = "asking", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Relationship> askings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "asked", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Relationship> askeds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Friends> friendBs = new ArrayList<>();
 
     public User(SignupDto requestDto, String password) {
         this.email = requestDto.getEmail();
