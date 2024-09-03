@@ -1,7 +1,7 @@
 package com.sparta.snsproject.controller;
 
-import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
-import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
+import com.sparta.snsproject.dto.RelationshipResponseDto;
+import com.sparta.snsproject.dto.UserSimpleResponseDto;
 import com.sparta.snsproject.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

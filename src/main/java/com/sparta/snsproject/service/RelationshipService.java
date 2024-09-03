@@ -1,7 +1,7 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
-import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
+import com.sparta.snsproject.dto.RelationshipResponseDto;
+import com.sparta.snsproject.dto.UserSimpleResponseDto;
 import com.sparta.snsproject.entity.AskStatus;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Relationship;

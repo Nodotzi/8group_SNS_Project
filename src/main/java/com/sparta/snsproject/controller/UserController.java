@@ -1,28 +1,26 @@
 package com.sparta.snsproject.controller;
 
-import com.sparta.snsproject.dto.user.UserRequestDto;
-import com.sparta.snsproject.dto.user.UserResponseDto;
+import com.sparta.snsproject.dto.UserRequestDto;
+import com.sparta.snsproject.dto.UserResponseDto;
 import com.sparta.snsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-//친구 등록
 @RestController
-@RequestMapping("/api/user")
 @RequiredArgsConstructor
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
-    /**
-     * 유저 등록
-     * @Param 회원가입 정보
-     * @Return 유저 등록 정보
-     * */
-    @PostMapping("")
-    public UserResponseDto createUser (@RequestBody UserRequestDto requestDto) {
-        return userService.createUser(requestDto);
+    //유저정보 단건 조회
+    @PostMapping("/{id}")
+    public UserResponseDto getUsers(@PathVariable Long id) {
+        return userService.getUser(id);
     }
+    //유저 사용자정보 수정
+    @PutMapping("/{id}") //반환타입 메서드
+    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto requestDto) {
+        return userService.getUser(userService.updateUser(id, requestDto));
+    }
+    //유저 비밀번호 수정
 }

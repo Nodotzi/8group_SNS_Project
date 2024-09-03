@@ -1,52 +1,43 @@
 package com.sparta.snsproject.entity;
 
-import com.sparta.snsproject.dto.user.UserRequestDto;
+import com.sparta.snsproject.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
 @Getter
-@Setter
-@Table(name="user")
+@Entity
 @NoArgsConstructor
-public class User extends Timestamped{
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name="email", unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String email;
-
-    @Column(name="password", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name="status", nullable = false, length = 100)
-    private UserStatus status;
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false, length = 100)
+    private UserStatusEnum user_status = UserStatusEnum.ABLE;
 
-    @Column(name="nickname", unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String nickname;
 
-    @Column(name="introduce", length=100)
+    @Column(length = 100)
     private String introduce;
 
-    @OneToMany(mappedBy = "asking", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Relationship> askings = new ArrayList<>();
-
-    @OneToMany(mappedBy = "asked", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Relationship> askeds = new ArrayList<>();
-
-    @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Friends> friendBs = new ArrayList<>();
-
-    public User(UserRequestDto requestDto) {
+    public User(UserRequestDto requestDto, String password) {
+        this.email = requestDto.getEmail();
+        this.password = password;
+        this.nickname = requestDto.getNickname();
+        this.introduce = requestDto.getIntroduce();
+    }
+    public void update(UserRequestDto requestDto){
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
-        this.nickname = requestDto.getNickname();
-        this.status = UserStatus.ABLED;
     }
+
 }

@@ -1,4 +1,4 @@
-package com.sparta.snsproject.dto.relationship;
+package com.sparta.snsproject.dto;
 
 import com.sparta.snsproject.entity.AskStatus;
 import com.sparta.snsproject.entity.Relationship;
