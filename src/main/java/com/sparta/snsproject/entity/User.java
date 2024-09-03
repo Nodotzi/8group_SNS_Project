@@ -1,5 +1,6 @@
 package com.sparta.snsproject.entity;
 
+import com.sparta.snsproject.dto.SignupDto;
 import com.sparta.snsproject.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class User {
     @Column(length = 100)
     private String introduce;
 
-    public User(UserRequestDto requestDto, String password) {
+    public User(SignupDto requestDto, String password) {
         this.email = requestDto.getEmail();
         this.password = password;
         this.nickname = requestDto.getNickname();
@@ -39,4 +40,7 @@ public class User {
         this.password = requestDto.getPassword();
     }
 
+    public void update() {
+        this.user_status = UserStatusEnum.DISABLE;
+    }
 }
