@@ -4,7 +4,6 @@ import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.UserRequestDto;
 import com.sparta.snsproject.dto.UserResponseDto;
-import com.sparta.snsproject.dto.UserSaveResponseDto;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +70,3 @@ public class UserService {
         return userRepository.findById(id).orElseThrow();
     }
 }
-
-
-

@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.logging.Logger;
 
 /***
  * <JWT 관련 기능>
