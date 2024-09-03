@@ -1,9 +1,6 @@
 package com.sparta.snsproject.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +14,12 @@ public class Posting extends Timestamped {
     private String userId;
     private String title;
     private String contents;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
+
+
 
     public Posting(String title, String contents, String userId) {
         this.title = title;

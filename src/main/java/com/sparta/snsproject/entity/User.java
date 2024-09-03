@@ -41,6 +41,10 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Friends> friendBs = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Posting> postingList = new ArrayList<>();
+
     public User(SignupDto requestDto, String password) {
         this.email = requestDto.getEmail();
         this.password = password;
