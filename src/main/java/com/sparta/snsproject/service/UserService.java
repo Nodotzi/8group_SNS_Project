@@ -1,9 +1,9 @@
 package com.sparta.snsproject.service;
 
+import com.sparta.snsproject.annotation.Sign;
 import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
-import com.sparta.snsproject.dto.UserRequestDto;
-import com.sparta.snsproject.dto.UserResponseDto;
+import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,25 +21,19 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public UserResponseDto createUser(UserRequestDto requestDto) {
+    public UserResponseDto createUser(SignupDto requestDto) {
 
-        boolean okemail = requestDto.getEmail().matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-z]+$");
-        boolean okpassword = requestDto.getPassword().matches("^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$");
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        if(okpassword && okemail) {
-            String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
+        //User Entity의 email 설정이 unique라서 중복예외처리 생략
 
-            //User Entity의 email 설정이 unique라서 중복예외처리 생략
+        // RequestDto -> entity
+        User user = new User(requestDto, encodedPassword);
 
-            // RequestDto -> entity
-            User user = new User(requestDto, encodedPassword);
-
-            // DB저장
-            User savedUser = userRepository.save(user);
-            // Entity -> ResponseDto
-            return new UserResponseDto(savedUser);
-        }
-        else throw new IllegalArgumentException("회원가입 정보입력 양식을 만족하지않습니다.");
+        // DB저장
+        User savedUser = userRepository.save(user);
+        // Entity -> ResponseDto
+        return new UserResponseDto(savedUser);
     }
 
     public List<UserResponseDto> getAllUser() {
@@ -66,7 +60,17 @@ public class UserService {
         UserResponseDto responseDto = new UserResponseDto(user);
         return responseDto;
     }
+
     public User find(Long id) {
         return userRepository.findById(id).orElseThrow();
+    }
+
+    public Long deleteUser(Long id, SignoutDto signoutDto) {
+        User user = userRepository.findById(id).orElseThrow();
+        if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
+            user.update();
+            return id;
+        }
+        else throw new IllegalArgumentException("비밀번호가 일치하지않습니다.");
     }
 }
