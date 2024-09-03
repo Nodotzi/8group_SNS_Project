@@ -1,7 +1,7 @@
 package com.sparta.snsproject.controller;
 
-import com.sparta.snsproject.dto.RelationshipResponseDto;
-import com.sparta.snsproject.dto.UserSimpleResponseDto;
+import com.sparta.snsproject.annotation.Sign;
+import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,60 +17,75 @@ public class RelationshipController {
 
     /***
      * 친구 요청
-     * @param asking_id : 친구 요청한 유저 아이디
-     * @param asked_id : 요청받은 유저 아이디
+     * @param signUser : 나의 로그인 정보
+     * @param requestDto : 친구 요청받은 유저의 아이디 정보
      * @return relationship 등록 정보
      */
-    @PostMapping("/{asking_id}/{asked_id}")
-    public RelationshipResponseDto askingFriend(@PathVariable("asking_id") Long asking_id, @PathVariable("asked_id") Long asked_id) {
-        return relationshipService.askingFriend(asking_id, asked_id);
+    @PostMapping("/asking")
+    public RelationshipResponseDto askingFriend(@Sign SignUser signUser, @RequestBody RelationshipAskingRequestDto requestDto) {
+        return relationshipService.askingFriend(signUser, requestDto);
     }
 
     /***
      * 친구 수락
-     * @param asking_id : 친구 요청한 유저 아이디
-     * @param asked_id : 요청받은 유저 아이디
+     * @param signUser : 나의 로그인 정보
+     * @param requestDto : 요청한 유저 아이디 정보
      * @return relationship 등록 정보
      */
-    @PutMapping("/{asking_id}/{asked_id}")
-    public RelationshipResponseDto acceptFriend(@PathVariable("asking_id") Long asking_id, @PathVariable Long asked_id) {
-        return relationshipService.acceptFriend(asking_id, asked_id);
+    @PutMapping("/accept")
+    public RelationshipResponseDto acceptFriend(@Sign SignUser signUser, @RequestBody RelationshipAcceptRequestDto requestDto) {
+        return relationshipService.acceptFriend(signUser, requestDto);
     }
 
     /***
      * 친구 삭제
-     * @param friendA_id : 삭제 요청한 유저 아이디
-     * @param friendB_id : 요청받은 유저 아이디
+     * @param signUser : 나의 로그인 정보
+     * @param requestDto : 삭제할 친구 아이디 정보
      * @return relationship 등록 정보
      */
-    @DeleteMapping("/{friendA_id}/{friendB_id}")
-    public RelationshipResponseDto deletedFriend(@PathVariable("friendA_id") Long friendA_id, @PathVariable("friendB_id") Long friendB_id) {
-        return relationshipService.deletedFriend(friendA_id, friendB_id);
+    @DeleteMapping("/remove")
+    public RelationshipResponseDto deletedFriend(@Sign SignUser signUser, @RequestBody FriendsDeleteRequestDto requestDto) {
+        return relationshipService.deletedFriend(signUser, requestDto);
     }
     /***
      * 요청받은 입장에서 요청한 유저들 목록
-     * @param asked_id : 요청받은 유정 아이디
+     * @param signUser : 나의 로그인 정보
      * @return  요청한 유저 목록
      */
 
-    @GetMapping("/asked/{asked_id}")
-    public List<UserSimpleResponseDto> askedFriendList(@PathVariable("asked_id") Long asked_id) {
-        return relationshipService.askedFriendList(asked_id);
+    @GetMapping("/askinglist")
+    public List<UserSimpleResponseDto> askingFriendList(@Sign SignUser signUser) {
+        return relationshipService.askingFriendList(signUser);
     }
 
 
     /**
      * 내가 요청한 친구 목록
-     * @param asking_id : 내 유저 아이디
+     * @param signUser : 나의 로그인 정보
      * @return 친구 오쳥 목록
      */
-    @GetMapping("/asking/{asking_id}")
-    public List<UserSimpleResponseDto> askingFriendList(@PathVariable("asking_id") Long asking_id) {
-        return relationshipService.askingFriendList(asking_id);
+    @GetMapping("/askedlist")
+    public List<UserSimpleResponseDto> askedFriendList(@Sign SignUser signUser) {
+        return relationshipService.askedFriendList(signUser);
     }
 
-    @PutMapping("/cancel/{my_id}/{friendId}")
-    public void cancelFriend(@PathVariable("my_id") Long my_id, @PathVariable("friendId") Long friendId) {
-        relationshipService.cancleFriend(my_id, friendId);
+    /**
+     *친구 요청 취소
+     * @param signUser : 나의 로그인 정보
+     * @param requestDto  : 친구 요청받은 유저의 아이디 정보
+     */
+    @PutMapping("/cancel")
+    public void cancelAsked(@Sign SignUser signUser, @RequestBody RelationshipAskingRequestDto requestDto) {
+        relationshipService.cancelAsked(signUser, requestDto);
+    }
+
+    /**
+     *친구 목록 조회
+     * @param signUser : 나의 로그인 정보
+     * @return : 친구 목록
+     */
+    @GetMapping("/getfriends")
+    public List<UserSimpleResponseDto> getFriends(@Sign SignUser signUser) {
+        return relationshipService.getfriends(signUser);
     }
 }

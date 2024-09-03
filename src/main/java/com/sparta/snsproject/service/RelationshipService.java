@@ -1,7 +1,6 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.dto.RelationshipResponseDto;
-import com.sparta.snsproject.dto.UserSimpleResponseDto;
+import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.AskStatus;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Relationship;
@@ -25,11 +24,11 @@ public class RelationshipService {
 
     //친구 요청
     @Transactional
-    public RelationshipResponseDto askingFriend(Long askingId, Long askedId) {
+    public RelationshipResponseDto askingFriend(SignUser signUser, RelationshipAskingRequestDto requestDto) {
         //요청한 유저 찾기
-        User asking = userRepository.findById(askingId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User asking = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         //요청 받은 유저 찾기
-        User asked = userRepository.findById(askedId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User asked = userRepository.findById(requestDto.getAsked_id()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         //두 유저로 relationship객체 생성(상태는 자동으로 wait)
         Relationship relationship = new Relationship(asking, asked);
         //데이터 저장
@@ -40,16 +39,16 @@ public class RelationshipService {
     }
 
     @Transactional
-    public RelationshipResponseDto acceptFriend(Long askingId, Long askedId) {
+    public RelationshipResponseDto acceptFriend(SignUser signUser, RelationshipAcceptRequestDto requestDto) {
         //요청한 유저와 요청받은 유저의 아이디로 해당 relationship 찾기
-        Relationship relationship = relationshipRepository.findByAskingIdAndAskedId(askingId, askedId).orElseThrow(()->new NullPointerException("친구 요청한 기록이 없습니다"));
+        Relationship relationship = relationshipRepository.findByAskingIdAndAskedId(requestDto.getAsking_id(), signUser.getId()).orElseThrow(()->new NullPointerException("친구 요청한 기록이 없습니다"));
         //relatiohship 상태를 accept로 변경
         relationship.accept();
         //수정된 데이터 저장
         Relationship saveRelationship = relationshipRepository.save(relationship);
         //두 아이디로 두 유저 찾기
-        User asking = userRepository.findById(askingId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
-        User asked = userRepository.findById(askedId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User asking = userRepository.findById(requestDto.getAsking_id()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User asked = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         //두 유저로 친구 객체 생성
         Friends friends = new Friends(asking, asked);
         //친구 데이터 저장
@@ -63,7 +62,9 @@ public class RelationshipService {
 
     //친구 삭제
     @Transactional
-    public RelationshipResponseDto deletedFriend(Long friendAId, Long friendBId) {
+    public RelationshipResponseDto deletedFriend(SignUser signUser, FriendsDeleteRequestDto requestDto) {
+        Long friendAId = signUser.getId();
+        Long friendBId = requestDto.getFriendId();
         //둘중 누가 요청자인지 모르므로 둘다 번갈아 넣어서 해당 relationship 데이터 찾기
         Relationship relationship = relationshipRepository.findByAskingIdAndAskedId(friendAId, friendBId)
                 .orElseGet(()->relationshipRepository.findByAskingIdAndAskedId(friendBId,friendAId)
@@ -81,9 +82,9 @@ public class RelationshipService {
     }
 
     //요청받은 사람이 보는 요청한 유저 목록
-    public List<UserSimpleResponseDto> askedFriendList(Long askedId) {
+    public List<UserSimpleResponseDto> askingFriendList(SignUser signUser) {
         //요청 받은 사람이 askedId인 relationship 목록
-        List<Relationship> askingList = relationshipRepository.findAllByAskedIdAndStatus(askedId, AskStatus.WAIT);
+        List<Relationship> askingList = relationshipRepository.findAllByAskedIdAndStatus(signUser.getId(), AskStatus.WAIT);
         //리스트 속 각 relationship를 요청한 유저를 추출하고 UserSimpleResponseDto로 변환 -> 내보내기
         return askingList.stream()
                 .map(Relationship::getAsking)
@@ -91,9 +92,9 @@ public class RelationshipService {
     }
 
     //내가 요청한 친구 목록
-    public List<UserSimpleResponseDto> askingFriendList(Long askingId) {
+    public List<UserSimpleResponseDto> askedFriendList(SignUser signUser) {
         //relationship 데이터에서 asking_id가 askingId인 데이터 목록 찾기
-        List<Relationship> askedList = relationshipRepository.findAllByAskingIdAndStatus(askingId, AskStatus.WAIT);
+        List<Relationship> askedList = relationshipRepository.findAllByAskingIdAndStatus(signUser.getId(), AskStatus.WAIT);
 
         //리스트 속 각 relationship를 요청받은 유저를 추출하고 UserSimpleResponseDto로 변환 -> 내보내기
         return askedList.stream()
@@ -101,10 +102,21 @@ public class RelationshipService {
                 .map(UserSimpleResponseDto::new).toList();
     }
 
-    //친구 요청 삭제
-    public void cancleFriend(Long myId, Long friendId) {
-        Relationship relationship = relationshipRepository.findByAskingIdAndAskedId(myId, friendId).orElseThrow(()->new NullPointerException("친구신청한 기록이 없습니다."));
-        relationship.delete();
+    //친구 요청 취소
+    @Transactional
+    public void cancelAsked(SignUser signUser, RelationshipAskingRequestDto requestDto) {
+        Relationship relationship = relationshipRepository.findByAskingIdAndAskedId(signUser.getId(), requestDto.getAsked_id()).orElseThrow(()->new NullPointerException("친구신청한 기록이 없습니다."));
+        System.out.println(relationship.getAsking().getId()+","+ relationship.getAsked().getId());
+        relationship.cancel();
         relationshipRepository.save(relationship);
+    }
+
+    //친구 목록 조홰
+    public List<UserSimpleResponseDto> getfriends(SignUser signUser) {
+        List<Friends> friendsList = friendsRepository.findAllByFriendAId(signUser.getId());
+        return friendsList.stream()
+                .map(Friends::getFriendB)
+                .map(UserSimpleResponseDto::new)
+                .toList();
     }
 }
