@@ -24,7 +24,7 @@ public class Relationship {
     private User receive;
 
     @Column(name="status")
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private AskStatus status;
 
     public Relationship(User send, User receive) {

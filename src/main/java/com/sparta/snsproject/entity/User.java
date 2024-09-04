@@ -1,6 +1,6 @@
 package com.sparta.snsproject.entity;
 
-import com.sparta.snsproject.dto.SignupDto;
+import com.sparta.snsproject.dto.SignupRequestDto;
 import com.sparta.snsproject.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,6 +17,8 @@ public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
 
     @Column(nullable = false, length = 100)
     private String email;
@@ -41,7 +43,12 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Friends> friendBs = new ArrayList<>();
 
-    public User(SignupDto requestDto, String password) {
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Posting> postingList = new ArrayList<>();
+
+    public User(SignupRequestDto requestDto, String password) {
         this.email = requestDto.getEmail();
         this.password = password;
         this.nickname = requestDto.getNickname();
