@@ -21,9 +21,9 @@ public class RelationshipController {
      * @param requestDto : 친구 요청받은 유저의 아이디 정보
      * @return relationship 등록 정보
      */
-    @PostMapping("/asking")
-    public RelationshipResponseDto askingFriend(@Sign SignUser signUser, @RequestBody RelationshipAskingRequestDto requestDto) {
-        return relationshipService.askingFriend(signUser, requestDto);
+    @PostMapping("/send")
+    public RelationshipResponseDto sendFriend(@Sign SignUser signUser, @RequestBody RelationshipSendRequestDto requestDto) {
+        return relationshipService.sendFriend(signUser, requestDto);
     }
 
     /***
@@ -41,11 +41,10 @@ public class RelationshipController {
      * 친구 삭제
      * @param signUser : 나의 로그인 정보
      * @param requestDto : 삭제할 친구 아이디 정보
-     * @return relationship 등록 정보
      */
     @DeleteMapping("/remove")
-    public RelationshipResponseDto deletedFriend(@Sign SignUser signUser, @RequestBody FriendsDeleteRequestDto requestDto) {
-        return relationshipService.deletedFriend(signUser, requestDto);
+    public void deletedFriend(@Sign SignUser signUser, @RequestBody FriendsDeleteRequestDto requestDto) {
+        relationshipService.deletedFriend(signUser, requestDto);
     }
     /***
      * 요청받은 입장에서 요청한 유저들 목록
@@ -53,9 +52,9 @@ public class RelationshipController {
      * @return  요청한 유저 목록
      */
 
-    @GetMapping("/askinglist")
-    public List<UserSimpleResponseDto> askingFriendList(@Sign SignUser signUser) {
-        return relationshipService.askingFriendList(signUser);
+    @GetMapping("/sendFriendlist")
+    public List<UserSimpleResponseDto> sendFriendList(@Sign SignUser signUser) {
+        return relationshipService.sendFriendList(signUser);
     }
 
 
@@ -64,9 +63,9 @@ public class RelationshipController {
      * @param signUser : 나의 로그인 정보
      * @return 친구 오쳥 목록
      */
-    @GetMapping("/askedlist")
-    public List<UserSimpleResponseDto> askedFriendList(@Sign SignUser signUser) {
-        return relationshipService.askedFriendList(signUser);
+    @GetMapping("/receiveFriendlist")
+    public List<UserSimpleResponseDto> receiveFriendList(@Sign SignUser signUser) {
+        return relationshipService.receiveFriendList(signUser);
     }
 
     /**
@@ -75,8 +74,8 @@ public class RelationshipController {
      * @param requestDto  : 친구 요청받은 유저의 아이디 정보
      */
     @PutMapping("/cancel")
-    public void cancelAsked(@Sign SignUser signUser, @RequestBody RelationshipAskingRequestDto requestDto) {
-        relationshipService.cancelAsked(signUser, requestDto);
+    public void cancelSend(@Sign SignUser signUser, @RequestBody RelationshipSendRequestDto requestDto) {
+        relationshipService.cancelSend(signUser, requestDto);
     }
 
     /**

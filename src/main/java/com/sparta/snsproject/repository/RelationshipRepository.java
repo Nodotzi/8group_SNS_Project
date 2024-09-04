@@ -11,9 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface RelationshipRepository extends JpaRepository<Relationship, Long> {
-    Optional<Relationship> findByAskingIdAndAskedId(Long askingId, Long askedId);
+    Optional<Relationship> findBySendIdAndReceiveId(Long sendId, Long receiveId);
 
-    List<Relationship> findAllByAskedIdAndStatus(Long askedId, AskStatus status);
+    List<Relationship> findAllBySendIdAndStatus(Long sendId, AskStatus status);
 
-    List<Relationship> findAllByAskingIdAndStatus(Long askingId, AskStatus status);
+    List<Relationship> findAllByReceiveIdAndStatus(Long receiveId, AskStatus status);
 }
