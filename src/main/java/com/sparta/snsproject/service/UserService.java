@@ -5,6 +5,7 @@ import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
+import com.sparta.snsproject.exception.WrongPasswordException;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,8 +71,9 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
+            //탈퇴하고 친구관계끊기
             return id;
         }
-        else throw new IllegalArgumentException("비밀번호가 일치하지않습니다.");
+        else throw new WrongPasswordException();
     }
 }
