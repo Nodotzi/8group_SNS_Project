@@ -8,13 +8,13 @@ public class PostingResponseDto {
     private final Long id;
     private final String title;
     private final String contents;
-    private final UserSimpleResponseDto user;
+    private final UserNicknameResponseDto user;
 
     public PostingResponseDto(Long id, String title, String contents, User user) {
         this.id = id;
         this.title = title;
         this.contents = contents;
-        this.user = new UserSimpleResponseDto(user);
+        this.user = new UserNicknameResponseDto(user);
     }
 
 

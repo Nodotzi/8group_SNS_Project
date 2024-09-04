@@ -5,7 +5,6 @@ import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
-import com.sparta.snsproject.exception.GlobalExceptionHandler;
 import com.sparta.snsproject.exception.WrongPasswordException;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

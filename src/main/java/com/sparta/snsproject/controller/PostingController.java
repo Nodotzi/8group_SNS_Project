@@ -1,5 +1,6 @@
 package com.sparta.snsproject.controller;
 
+import com.sparta.snsproject.annotation.Sign;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.service.PostingService;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +16,16 @@ public class PostingController {
     private final PostingService postingService;
 
     @PostMapping("/api/posting")
-    public ResponseEntity<PostingResponseDto> savePosting(@RequestBody PostingSaveRequestDto postingSaveRequestDto) {
-        return ResponseEntity.ok(postingService.savePosting(postingSaveRequestDto));
+    public ResponseEntity<PostingResponseDto> savePosting(@Sign SignUser signUser, @RequestBody PostingRequestDto postingRequestDto) {
+        return ResponseEntity.ok(postingService.savePosting(signUser, postingRequestDto));
     }
 
-    @GetMapping("/api/users/{user_id}/postings")
-    public ResponseEntity<List<PostingResponseDto>> getPostings() {
-        return ResponseEntity.ok(postingService.getPostings());
+    @GetMapping("/api/postings")
+    public ResponseEntity<List<PostingResponseDto>> getPostings(@Sign SignUser signUser) {
+        return ResponseEntity.ok(postingService.getPostings(signUser));
     }
 
-    @GetMapping("/api/users/{user_id}/posting/{posting_id}")
+    @GetMapping("/api/posting/{posting_id}")
     public ResponseEntity<PostingResponseDto> getPosting(@PathVariable Long posting_id) {
         return ResponseEntity.ok(postingService.getPosting(posting_id));
     }
@@ -32,9 +33,9 @@ public class PostingController {
     @PutMapping("/api/posting/{posting_id}")
     public ResponseEntity<PostingResponseDto> updatePosting(
             @PathVariable Long posting_id,
-            @RequestBody PostingUpdateRequestDto postingUpdateRequestDto
+            @RequestBody PostingRequestDto postingRequestDto
     ) {
-        return ResponseEntity.ok(postingService.updatePosting(posting_id, postingUpdateRequestDto));
+        return ResponseEntity.ok(postingService.updatePosting(posting_id, postingRequestDto));
     }
     
     @DeleteMapping("/api/posting/{posting_id}")
