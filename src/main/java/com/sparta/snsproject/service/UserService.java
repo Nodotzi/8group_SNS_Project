@@ -5,12 +5,15 @@ import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.exception.DuplicateEmailException;
+import com.sparta.snsproject.exception.GlobalExceptionHandler;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +29,10 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
         //User Entity의 email 설정이 unique라서 중복예외처리 생략
+        Optional<User> existingUser = userRepository.findByEmail(requestDto.getEmail());
+        if (existingUser.isPresent()) {
+            throw new DuplicateEmailException();
+        }
 
         // RequestDto -> entity
         User user = new User(requestDto, encodedPassword);
@@ -51,7 +58,7 @@ public class UserService {
 
     private User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
+                new IllegalArgumentException("선택한 유저는 존재하지 않습니다.")
         );
     }
 
