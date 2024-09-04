@@ -18,10 +18,6 @@ public class Posting extends Timestamped {
     private String title;
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
-
 
 
     public Posting(String title, String contents, User user) {

@@ -67,8 +67,8 @@ public class PostingService {
     @Transactional
     public PostingResponseDto updatePosting(Long posting_id, PostingUpdateRequestDto postingUpdateRequestDto) {
         Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NullPointerException("없음"));
-        posting.update(posting.getContents(), posting.getTitle());
-
+        posting.update(postingUpdateRequestDto.getContents(), postingUpdateRequestDto.getTitle());
+        postingRepository.save(posting);
         return new PostingResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),
                 posting.getUser()
         );
