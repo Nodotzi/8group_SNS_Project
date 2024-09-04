@@ -46,10 +46,23 @@ public class UserService {
         return userRepository.findAll().stream().map(UserResponseDto::new).collect(Collectors.toList());
     } // 메서드 이름으로 SQL 생성하는 Query Methods 기능.
 
+    public Long updatePassword(Long id, PasswordUpdateRequestDto passwordUpdateRequestDto) {
+        // 해당 메모가 DB에 존재하는지 확인
+        User user = find(id);
+
+
+        //DB password = confirmpassword 확인
+        if(passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword())){
+            // user Password 수정
+            user.updatePassword(passwordUpdateRequestDto.getNewPassword());
+        }
+
+        return id;
+    }
     public Long updateUser(Long id, UserRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
-        // schedule 내용 수정
+        // introduce, nickname 내용 수정
         user.update(requestDto);
 
         return id;
