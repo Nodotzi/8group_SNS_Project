@@ -32,11 +32,11 @@ public class User extends Timestamped{
     @Column(length = 100)
     private String introduce;
 
-    @OneToMany(mappedBy = "asking", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Relationship> askings = new ArrayList<>();
+    @OneToMany(mappedBy = "send", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Relationship> sends = new ArrayList<>();
 
-    @OneToMany(mappedBy = "asked", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Relationship> askeds = new ArrayList<>();
+    @OneToMany(mappedBy = "receive", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Relationship> receives = new ArrayList<>();
 
     @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Friends> friendBs = new ArrayList<>();
