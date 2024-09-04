@@ -16,4 +16,6 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Long
     List<Relationship> findAllBySendIdAndStatus(Long sendId, AskStatus status);
 
     List<Relationship> findAllByReceiveIdAndStatus(Long receiveId, AskStatus status);
+
+    List<Relationship> findAllBySendId(Long sendid);
 }
