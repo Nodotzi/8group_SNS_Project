@@ -40,4 +40,8 @@ public class Relationship {
     public void delete() {
         this.status = AskStatus.DELETED;
     }
+
+    public void cancel() {
+        this.status = AskStatus.CANCELLED;
+    }
 }
