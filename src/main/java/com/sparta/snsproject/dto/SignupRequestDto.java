@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.io.Serializable;
 
 @Getter
-public class SignupDto implements Serializable {
+public class SignupRequestDto implements Serializable {
 
     @Email(message = "이메일 형식을 맞춰주세요.")
     private String email;

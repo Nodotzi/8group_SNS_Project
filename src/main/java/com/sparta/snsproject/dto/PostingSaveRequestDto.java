@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class PostingSaveRequestDto {
 
-    private String userId;
+    private Long userId;
     private String title;
     private String contents;
 }

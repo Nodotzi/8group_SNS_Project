@@ -1,7 +1,7 @@
 package com.sparta.snsproject.dto;
 
+import com.sparta.snsproject.entity.User;
 import lombok.Getter;
-import org.apache.catalina.User;
 
 @Getter
 public class PostingSaveResponseDto {
@@ -9,14 +9,13 @@ public class PostingSaveResponseDto {
     private final Long id;
     private final String title;
     private final String contents;
-    private final String userId;
+    private final UserResponseDto user;
 
-    public PostingSaveResponseDto(Long id, String title, String contents, String userId) {
+    public PostingSaveResponseDto(Long id, String title, String contents, User user) {
         this.id = id;
         this.title = title;
         this.contents = contents;
-        this.userId = userId;
-
+        this.user = new UserResponseDto(user);
     }
 
 }

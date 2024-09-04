@@ -1,10 +1,7 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.SignUser;
-import com.sparta.snsproject.dto.SignoutDto;
-import com.sparta.snsproject.dto.SignupDto;
-import com.sparta.snsproject.dto.UserResponseDto;
+import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +17,8 @@ public class SignController {
     private final UserService userService;
 
     @PostMapping("/api/signup")
-    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody SignupDto signupDto) {
-        return ResponseEntity.ok(userService.createUser(signupDto));
+    public ResponseEntity<SignupResponseDto> createUser(@Valid @RequestBody SignupRequestDto signupRequestDto) {
+        return ResponseEntity.ok(userService.createUser(signupRequestDto));
     }
 
     @DeleteMapping("/api/signout")
