@@ -16,32 +16,24 @@ public class Relationship {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="asking_id", nullable = false)
-    private User asking;
+    @JoinColumn(name="send_id", nullable = false)
+    private User send;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="asked_id", nullable = false)
-    private User asked;
+    @JoinColumn(name="receive_id", nullable = false)
+    private User receive;
 
     @Column(name="status")
     @Enumerated(value = EnumType.STRING)
     private AskStatus status;
 
-    public Relationship(User asking, User asked) {
-        this.asking = asking;
-        this.asked = asked;
+    public Relationship(User send, User receive) {
+        this.send = send;
+        this.receive = receive;
         this.status = AskStatus.WAIT;
     }
 
     public void accept() {
         this.status = AskStatus.ACCEPTED;
-    }
-
-    public void delete() {
-        this.status = AskStatus.DELETED;
-    }
-
-    public void cancel() {
-        this.status = AskStatus.CANCELLED;
     }
 }
