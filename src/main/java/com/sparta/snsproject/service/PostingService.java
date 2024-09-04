@@ -1,11 +1,19 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.NewsfeedResponseDto;
+import com.sparta.snsproject.dto.PostingResponseDto;
+import com.sparta.snsproject.dto.PostingSaveRequestDto;
+import com.sparta.snsproject.dto.PostingUpdateRequestDto;
+import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Posting;
 import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.repository.FriendsRepository;
 import com.sparta.snsproject.repository.PostingRepository;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +27,7 @@ public class PostingService {
 
     private final PostingRepository postingRepository;
     private final UserRepository userRepository;
+    private final FriendsRepository friendsRepository;
 
 
     @Transactional
@@ -77,11 +86,26 @@ public class PostingService {
     @Transactional
     public void deletePosting(Long posting_id){
         postingRepository.deleteById(posting_id);
+    }
 
+    public Page<NewsfeedResponseDto> getNewsfeed(Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        //중간테이블에서 친구관계인 유저들 다 찾기
+        List<Friends> friendsList = friendsRepository.findAllByFriendAId(user.getId());
+        //찾은 유저들 리스트에 저장
+        List<User> userlist = new ArrayList<>();
+        for(Friends f:friendsList) {
+            userlist.add(f.getFriendB());
+        }
+
+        //찾은 각각 유저들의 포스팅을 리스트 한곳에 싹다 모으기
+        List<Posting> postingList = postingRepository.findAllByUserInOrderByCreatedAtDesc(userlist);
+
+        //리스트 -> 페이지네이션
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), postingList.size());
+        Page<NewsfeedResponseDto> pages = new PageImpl<>(postingList.subList(start, end), pageRequest, postingList.size()).map(NewsfeedResponseDto::new);
+        return pages;
     }
 }
-
-
-
-
-

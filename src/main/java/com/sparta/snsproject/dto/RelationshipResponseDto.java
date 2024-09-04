@@ -6,13 +6,13 @@ import lombok.Getter;
 
 @Getter
 public class RelationshipResponseDto {
-    private Long asking_id;
-    private Long asked_id;
+    private Long send_id;
+    private Long receive_id;
     private AskStatus status;
 
     public RelationshipResponseDto(Relationship saveRelationship) {
-        this.asking_id = saveRelationship.getAsking().getId();
-        this.asked_id = saveRelationship.getAsked().getId();
+        this.send_id = saveRelationship.getSend().getId();
+        this.receive_id = saveRelationship.getReceive().getId();
         this.status = saveRelationship.getStatus();
     }
 }

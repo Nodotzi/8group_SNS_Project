@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class RelationshipAcceptRequestDto {
-    private Long asking_id;
+    private Long send_id;
 }

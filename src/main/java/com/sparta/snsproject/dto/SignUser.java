@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 public class SignUser {
 
     private final Long id;
-    private final String password;
+    private final String email;
 
 }
