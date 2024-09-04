@@ -1,6 +1,5 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.User;
@@ -21,13 +20,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final RelationshipService relationshipService;
 
     public SignupResponseDto createUser(SignupRequestDto requestDto) {
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        //User Entity의 email 설정이 unique라서 중복예외처리 생략
+        //User Entity의 email 중복예외처리
         Optional<User> existingUser = userRepository.findByEmail(requestDto.getEmail());
         if (existingUser.isPresent()) {
             throw new DuplicateEmailException();
@@ -71,7 +70,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
-            //탈퇴하고 친구관계끊기
+            relationshipService.SignoutUser(id);
             return id;
         }
         else throw new WrongPasswordException();
