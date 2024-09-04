@@ -2,7 +2,9 @@ package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.Posting;
+import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.repository.PostingRepository;
+import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,57 +18,59 @@ import java.util.List;
 public class PostingService {
 
     private final PostingRepository postingRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
-    public PostingSaveResponseDto savePosting(PostingSaveRequestDto postingSaveRequestDto) {
+    public PostingResponseDto savePosting(PostingSaveRequestDto postingSaveRequestDto) {
+        User user = userRepository.findById(postingSaveRequestDto.getUserid()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         Posting newPosting = new Posting(
                 postingSaveRequestDto.getTitle(),
                 postingSaveRequestDto.getContents(),
-                postingSaveRequestDto.getUserId()////보류
+                user
         );
 
         Posting savedPosting = postingRepository.save(newPosting);
 
-        return new PostingSaveResponseDto(
+        return new PostingResponseDto(
                 savedPosting.getId(),
                 savedPosting.getTitle(),
                 savedPosting.getContents(),
-                savedPosting.getUserId()
+                savedPosting.getUser()
         );
     }
 
-    public List<PostingSimpleResponseDto> getPostings() {
+    public List<PostingResponseDto> getPostings() {
         List<Posting> postingList = postingRepository.findAll();
 
-        List<PostingSimpleResponseDto> dtoList = new ArrayList<>();
+        List<PostingResponseDto> dtoList = new ArrayList<>();
 
         for (Posting posting : postingList) {
-            PostingSimpleResponseDto dto = new PostingSimpleResponseDto(
-                    posting.getId(), posting.getTitle(), posting.getContents(), posting.getUserId());
+            PostingResponseDto dto = new PostingResponseDto(
+                    posting.getId(), posting.getTitle(), posting.getContents(), posting.getUser());
             dtoList.add(dto);
         }
         return dtoList;
     }
 
-    public PostingDetaliResponseDto getPosting(Long posting_id) {
+    public PostingResponseDto getPosting(Long posting_id) {
         Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NullPointerException("없음"));
-        return new PostingDetaliResponseDto(
+        return new PostingResponseDto(
                 posting.getId(),
                 posting.getTitle(),
                 posting.getContents(),
-                posting.getUserId());
+                posting.getUser());
     }
 
 
 
     @Transactional
-    public PostingUpdateResponseDto updatePosting(Long posting_id, PostingUpdateRequestDto postingUpdateRequestDto) {
+    public PostingResponseDto updatePosting(Long posting_id, PostingUpdateRequestDto postingUpdateRequestDto) {
         Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NullPointerException("없음"));
         posting.update(posting.getContents(), posting.getTitle());
 
-        return new PostingUpdateResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),
-                posting.getUserId()
+        return new PostingResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),
+                posting.getUser()
         );
     }
 
