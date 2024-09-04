@@ -48,14 +48,14 @@ public class UserService {
 
     public Long updateUser(Long id, UserRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        User user = findUser(id);
+        User user = find(id);
         // schedule 내용 수정
         user.update(requestDto);
 
         return id;
     }
 
-    private User findUser(Long id) {
+    private User find(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 유저는 존재하지 않습니다.")
         );
@@ -66,11 +66,7 @@ public class UserService {
         UserResponseDto responseDto = new UserResponseDto(user);
         return responseDto;
     }
-
-    public User find(Long id) {
-        return userRepository.findById(id).orElseThrow();
-    }
-
+    
     public Long deleteUser(Long id, SignoutDto signoutDto) {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {

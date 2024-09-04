@@ -18,12 +18,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateNickNameException.class)
-    public ApiResponse<?> handleCourseNameException(DuplicateNickNameException e) {
+    public ApiResponse<?> handleDuplicateNickNameException(DuplicateNickNameException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
-    public ApiResponse<?> handleCourseNameException(DuplicateEmailException e) {
+    public ApiResponse<?> handleDuplicateEmailException(DuplicateEmailException e) {
+        return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+    }
+    @ExceptionHandler(ExistFrandsName.class)
+    public ApiResponse<?> handleExistFrandsNameException(ExistFrandsName e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 }
