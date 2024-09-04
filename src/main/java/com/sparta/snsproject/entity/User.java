@@ -18,6 +18,8 @@ public class User extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @Column(nullable = false, length = 100)
     private String email;
     @Column(nullable = false, length = 100)
@@ -41,7 +43,9 @@ public class User extends Timestamped{
     @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Friends> friendBs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Posting> postingList = new ArrayList<>();
 
     public User(SignupRequestDto requestDto, String password) {

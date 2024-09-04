@@ -4,18 +4,17 @@ import com.sparta.snsproject.entity.User;
 import lombok.Getter;
 
 @Getter
-public class PostingSimpleResponseDto {
-
+public class PostingResponseDto {
     private final Long id;
     private final String title;
     private final String contents;
-    private final User user;
+    private final UserSimpleResponseDto user;
 
-    public PostingSimpleResponseDto(Long id, String title, String contents, User user) {
+    public PostingResponseDto(Long id, String title, String contents, User user) {
         this.id = id;
         this.title = title;
         this.contents = contents;
-        this.user = user;
+        this.user = new UserSimpleResponseDto(user);
     }
 
 

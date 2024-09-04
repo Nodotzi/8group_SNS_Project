@@ -13,11 +13,12 @@ public class Posting extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String contents;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
     private User user;
 
     public Posting(String title, String contents, User user) {
