@@ -1,17 +1,12 @@
 package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.dto.friends.FriendsDeleteRequestDto;
-import com.sparta.snsproject.dto.relationship.RelationshipAcceptRequestDto;
-import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
-import com.sparta.snsproject.dto.relationship.RelationshipSendRequestDto;
+import com.sparta.snsproject.dto.relationship.*;
 import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.entity.*;
 import com.sparta.snsproject.exception.ExistFrandsName;
-import com.sparta.snsproject.repository.FriendsRepository;
-import com.sparta.snsproject.repository.PostingRepository;
-import com.sparta.snsproject.repository.RelationshipRepository;
-import com.sparta.snsproject.repository.UserRepository;
+import com.sparta.snsproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
