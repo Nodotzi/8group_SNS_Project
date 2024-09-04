@@ -50,11 +50,14 @@ public class UserService {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
 
-
         //DB password = confirmpassword 확인
         if(passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword())){
             // user Password 수정
-            user.updatePassword(passwordUpdateRequestDto.getNewPassword());
+            String encodedPassword = passwordEncoder.encode(passwordUpdateRequestDto.getNewPassword());
+            user.updatePassword(encodedPassword);
+        }
+        else{
+            throw new DuplicateEmailException();
         }
 
         return id;
@@ -66,6 +69,7 @@ public class UserService {
         user.update(requestDto);
 
         return id;
+
     }
 
     private User find(Long id) {

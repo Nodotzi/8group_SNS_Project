@@ -3,6 +3,7 @@ package com.sparta.snsproject.controller;
 import com.sparta.snsproject.annotation.Sign;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class UserController {
     }
     //유저 비밀번호 수정
     @PostMapping("/my/password")
-    public ResponseEntity<Long> updatePassword(@Sign SignUser signUser, @RequestBody PasswordUpdateRequestDto passwordUpdateRequestDto) {
+    public ResponseEntity<Long> updatePassword(@Sign SignUser signUser, @Valid @RequestBody PasswordUpdateRequestDto passwordUpdateRequestDto) {
         Long id = signUser.getId();
         return ResponseEntity.ok(userService.updatePassword(id,passwordUpdateRequestDto));
     }
