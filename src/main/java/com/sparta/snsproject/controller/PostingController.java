@@ -15,22 +15,22 @@ public class PostingController {
     private final PostingService postingService;
 
     @PostMapping("/api/posting")
-    public ResponseEntity<PostingSaveResponseDto> savePosting(@RequestBody PostingSaveRequestDto postingSaveRequestDto) {
+    public ResponseEntity<PostingResponseDto> savePosting(@RequestBody PostingSaveRequestDto postingSaveRequestDto) {
         return ResponseEntity.ok(postingService.savePosting(postingSaveRequestDto));
     }
 
     @GetMapping("/api/users/{user_id}/postings")
-    public ResponseEntity<List<PostingSimpleResponseDto>> getPostings() {
+    public ResponseEntity<List<PostingResponseDto>> getPostings() {
         return ResponseEntity.ok(postingService.getPostings());
     }
 
     @GetMapping("/api/users/{user_id}/posting/{posting_id}")
-    public ResponseEntity<PostingDetaliResponseDto> getPosting(@PathVariable Long posting_id) {
+    public ResponseEntity<PostingResponseDto> getPosting(@PathVariable Long posting_id) {
         return ResponseEntity.ok(postingService.getPosting(posting_id));
     }
 
     @PutMapping("/api/posting/{posting_id}")
-    public ResponseEntity<PostingUpdateResponseDto> updatePosting(
+    public ResponseEntity<PostingResponseDto> updatePosting(
             @PathVariable Long posting_id,
             @RequestBody PostingUpdateRequestDto postingUpdateRequestDto
     ) {
