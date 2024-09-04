@@ -1,9 +1,9 @@
 package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.dto.NewsfeedResponseDto;
+import com.sparta.snsproject.dto.PostingRequestDto;
 import com.sparta.snsproject.dto.PostingResponseDto;
-import com.sparta.snsproject.dto.PostingSaveRequestDto;
-import com.sparta.snsproject.dto.PostingUpdateRequestDto;
+import com.sparta.snsproject.dto.SignUser;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Posting;
 import com.sparta.snsproject.entity.User;
