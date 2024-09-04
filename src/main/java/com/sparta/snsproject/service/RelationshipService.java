@@ -1,12 +1,10 @@
 package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.dto.*;
-import com.sparta.snsproject.entity.AskStatus;
-import com.sparta.snsproject.entity.Friends;
-import com.sparta.snsproject.entity.Relationship;
-import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.entity.*;
 import com.sparta.snsproject.exception.ExistFrandsName;
 import com.sparta.snsproject.repository.FriendsRepository;
+import com.sparta.snsproject.repository.PostingRepository;
 import com.sparta.snsproject.repository.RelationshipRepository;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,6 +22,8 @@ public class RelationshipService {
     private final RelationshipRepository relationshipRepository;
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
+    private final PostingRepository postingRepository;
+
 
     //친구 요청
     @Transactional
@@ -31,7 +32,9 @@ public class RelationshipService {
         User send = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         //요청 받은 유저 찾기
         User receive = userRepository.findById(requestDto.getReceive_id()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
-        //이미 신청받아있다면 거부
+        //친구 요청을 나에게 할 수 없음
+        if(Objects.equals(send.getId(), receive.getId())) throw new IllegalArgumentException("자신에게는 친구요청을 할 수 없습니다.");
+        //이미 신청받아있다면 거부하고 수락해달라는 메세지 날림
         Optional<Relationship> alreadyRelationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getReceive_id(), signUser.getId());
         if (alreadyRelationship.isPresent()) {
             throw new ExistFrandsName();
@@ -122,5 +125,23 @@ public class RelationshipService {
                 .map(Friends::getFriendB)
                 .map(UserSimpleResponseDto::new)
                 .toList();
+    }
+
+    //회원 탈퇴시 게시물, 친구 요청 기록, 친구목록 삭제
+    @Transactional
+    public void SignoutUser(Long userId) {
+        //user객체가 있는지 확인
+        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다."));
+        //이 유저가 친구 요창한 기록이 있으면 모두 삭제
+        List<Relationship> relationships = relationshipRepository.findAllBySendId(userId);
+        relationshipRepository.deleteAll(relationships);
+        //이 유저와 친구 관계인 목록 다 삭제
+        List<Friends> friendsList = friendsRepository.findAllByFriendAId(userId);
+        friendsRepository.deleteAll(friendsList);
+        friendsList = friendsRepository.findAllByFriendBId(userId);
+        friendsRepository.deleteAll(friendsList);
+        //이 유저의 게시물 모두 삭제
+        List<Posting> postingList = postingRepository.findAllByUserId(userId);
+        postingRepository.deleteAll(postingList);
     }
 }

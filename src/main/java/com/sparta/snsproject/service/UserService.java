@@ -1,11 +1,10 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.*;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
-import com.sparta.snsproject.exception.GlobalExceptionHandler;
+import com.sparta.snsproject.exception.WrongPasswordException;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,13 +20,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final RelationshipService relationshipService;
 
     public SignupResponseDto createUser(SignupRequestDto requestDto) {
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        //User Entity의 email 설정이 unique라서 중복예외처리 생략
+        //User Entity의 email 중복예외처리
         Optional<User> existingUser = userRepository.findByEmail(requestDto.getEmail());
         if (existingUser.isPresent()) {
             throw new DuplicateEmailException();
@@ -88,8 +87,9 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
+            relationshipService.SignoutUser(id);
             return id;
         }
-        else throw new IllegalArgumentException("비밀번호가 일치하지않습니다.");
+        else throw new WrongPasswordException();
     }
 }
