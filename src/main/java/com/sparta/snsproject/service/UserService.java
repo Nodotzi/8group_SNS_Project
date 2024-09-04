@@ -1,6 +1,5 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.annotation.Sign;
 import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.*;
@@ -24,7 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public UserResponseDto createUser(SignupDto requestDto) {
+    public SignupResponseDto createUser(SignupRequestDto requestDto) {
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
@@ -40,7 +39,7 @@ public class UserService {
         // DB저장
         User savedUser = userRepository.save(user);
         // Entity -> ResponseDto
-        return new UserResponseDto(savedUser);
+        return new SignupResponseDto(savedUser);
     }
 
     public List<UserResponseDto> getAllUser() {

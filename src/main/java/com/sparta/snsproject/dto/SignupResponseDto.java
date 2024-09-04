@@ -6,21 +6,17 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class UserResponseDto {
-    private final Long userId;
+public class SignupResponseDto {
+
+    private final Long id;
     private final String email;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    //리스트 만들기
-
-
-    public UserResponseDto(User savedUser) {
-        this.userId = savedUser.getId();
+    public SignupResponseDto(User savedUser) {
+        this.id = savedUser.getId();
         this.email = savedUser.getEmail();
         this.createdAt = savedUser.getCreatedAt();
         this.modifiedAt = savedUser.getModifiedAt();
     }
-
-
 }
