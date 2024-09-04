@@ -1,8 +1,8 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.NewsfeedResponseDto;
-import com.sparta.snsproject.dto.SignUser;
+import com.sparta.snsproject.dto.posting.NewsfeedResponseDto;
+import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

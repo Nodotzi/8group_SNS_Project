@@ -1,7 +1,7 @@
 package com.sparta.snsproject.config;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.SignUser;
+import com.sparta.snsproject.dto.sign.SignUser;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;

@@ -1,6 +1,11 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.friends.FriendsDeleteRequestDto;
+import com.sparta.snsproject.dto.relationship.RelationshipAcceptRequestDto;
+import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
+import com.sparta.snsproject.dto.relationship.RelationshipSendRequestDto;
+import com.sparta.snsproject.dto.sign.SignUser;
+import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.entity.*;
 import com.sparta.snsproject.exception.ExistFrandsName;
 import com.sparta.snsproject.repository.FriendsRepository;
