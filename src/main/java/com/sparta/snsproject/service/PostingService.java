@@ -92,7 +92,6 @@ public class PostingService {
         User user = userRepository.findById(id).orElseThrow();
         //중간테이블에서 친구관계인 유저들 다 찾기
         List<Friends> friendsList = friendsRepository.findAllByFriendAId(user.getId());
-
         //찾은 유저들 리스트에 저장
         List<User> userlist = new ArrayList<>();
         for(Friends f:friendsList) {
