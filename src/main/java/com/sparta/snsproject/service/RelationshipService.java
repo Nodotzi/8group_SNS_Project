@@ -5,6 +5,7 @@ import com.sparta.snsproject.entity.AskStatus;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Relationship;
 import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.exception.ExistFrandsName;
 import com.sparta.snsproject.repository.FriendsRepository;
 import com.sparta.snsproject.repository.RelationshipRepository;
 import com.sparta.snsproject.repository.UserRepository;
@@ -36,7 +37,7 @@ public class RelationshipService {
         //이미 신청받아있다면 거부하고 수락해달라는 메세지 날림
         Optional<Relationship> alreadyRelationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getReceive_id(), signUser.getId());
         if (alreadyRelationship.isPresent()) {
-            throw new IllegalArgumentException("이미 이 유저로부터 친구 요청을 받았습니다. 수락해주세요.");
+            throw new ExistFrandsName();
         }
         //두 유저로 relationship객체 생성(상태는 자동으로 wait)
         Relationship relationship = new Relationship(send, receive);
