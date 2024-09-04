@@ -1,20 +1,18 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.SignUser;
+import com.sparta.snsproject.dto.SignoutDto;
+import com.sparta.snsproject.dto.SignupRequestDto;
+import com.sparta.snsproject.dto.SignupResponseDto;
 import com.sparta.snsproject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
