@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +30,11 @@ public class RelationshipService {
         User send = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         //요청 받은 유저 찾기
         User receive = userRepository.findById(requestDto.getReceive_id()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        //이미 신청받아있다면 거부
+        Optional<Relationship> alreadyRelationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getReceive_id(), signUser.getId());
+        if (alreadyRelationship.isPresent()) {
+            throw new IllegalArgumentException("이미 친구 요청을 한 유저입니다.");
+        }
         //두 유저로 relationship객체 생성(상태는 자동으로 wait)
         Relationship relationship = new Relationship(send, receive);
         //데이터 저장
