@@ -56,7 +56,7 @@ public class UserService {
             user.updatePassword(encodedPassword);
         }
         else{
-            throw new DuplicateEmailException();
+            throw new WrongPasswordException();
         }
 
         return id;

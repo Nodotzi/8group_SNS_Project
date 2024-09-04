@@ -19,8 +19,6 @@ public class User extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     @Column(unique = true, length = 100)
     private String email;
     @Column(nullable = false, length = 100)
