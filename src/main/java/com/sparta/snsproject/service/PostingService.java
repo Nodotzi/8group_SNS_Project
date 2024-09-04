@@ -22,11 +22,11 @@ public class PostingService {
 
 
     @Transactional
-    public PostingResponseDto savePosting(PostingSaveRequestDto postingSaveRequestDto) {
-        User user = userRepository.findById(postingSaveRequestDto.getUserid()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+    public PostingResponseDto savePosting(SignUser signUser, PostingRequestDto postingRequestDto) {
+        User user = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
         Posting newPosting = new Posting(
-                postingSaveRequestDto.getTitle(),
-                postingSaveRequestDto.getContents(),
+                postingRequestDto.getTitle(),
+                postingRequestDto.getContents(),
                 user
         );
 
@@ -40,8 +40,8 @@ public class PostingService {
         );
     }
 
-    public List<PostingResponseDto> getPostings() {
-        List<Posting> postingList = postingRepository.findAll();
+    public List<PostingResponseDto> getPostings(SignUser signUser) {
+        List<Posting> postingList = postingRepository.findAllByUserId(signUser.getId());
 
         List<PostingResponseDto> dtoList = new ArrayList<>();
 
@@ -65,9 +65,9 @@ public class PostingService {
 
 
     @Transactional
-    public PostingResponseDto updatePosting(Long posting_id, PostingUpdateRequestDto postingUpdateRequestDto) {
+    public PostingResponseDto updatePosting(Long posting_id, PostingRequestDto postingRequestDto) {
         Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NullPointerException("없음"));
-        posting.update(postingUpdateRequestDto.getContents(), postingUpdateRequestDto.getTitle());
+        posting.update(postingRequestDto.getContents(), postingRequestDto.getTitle());
         postingRepository.save(posting);
         return new PostingResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),
                 posting.getUser()
