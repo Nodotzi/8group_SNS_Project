@@ -1,6 +1,7 @@
 package com.sparta.snsproject.entity;
 
 import com.sparta.snsproject.dto.sign.SignupRequestDto;
+import com.sparta.snsproject.dto.user.UserProfileRequestDto;
 import com.sparta.snsproject.dto.user.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -53,7 +54,9 @@ public class User extends Timestamped{
         this.introduce = requestDto.getIntroduce();
     }
 
-    public void update(UserRequestDto requestDto){
+    public void update(UserProfileRequestDto requestDto) {
+        this.nickname = requestDto.getNewNickname();
+        this.introduce = requestDto.getNewIntroduce();
     }
     public void updatePassword(String password){
         this.password = password;
