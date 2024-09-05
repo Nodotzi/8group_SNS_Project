@@ -16,9 +16,9 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAllException(Exception e) {
-        return new ResponseEntity<>("서버 에러 발생", HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(ChangeSamePasswordException.class)
+    public ApiResponse<?> handleChangeSamePasswordException(ChangeSamePasswordException e) {
+        return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
     @ExceptionHandler(DuplicateNickNameException.class)
@@ -70,6 +70,7 @@ public class GlobalExceptionHandler {
         return getErrorResponse(status, String.join(",", errors));
     }
 
+
     //오류 메세지 내용
     public ResponseEntity<Map<String, Object>> getErrorResponse(HttpStatus status, String message) {
         Map<String, Object> errorResponse = new HashMap<>();
@@ -77,5 +78,9 @@ public class GlobalExceptionHandler {
         errorResponse.put("code", status.value());
         errorResponse.put("message", message);
         return new ResponseEntity<>(errorResponse, status);
+    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAllException(Exception e) {
+        return new ResponseEntity<>("서버 에러 발생", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
