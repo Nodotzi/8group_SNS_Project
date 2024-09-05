@@ -33,7 +33,7 @@ public class UserController {
     }
 
     //유저 비밀번호 수정
-    @PostMapping("/my/password")
+    @PutMapping("/my/password")
     public ResponseEntity<String> updatePassword(@Sign SignUser signUser, @Valid @RequestBody PasswordUpdateRequestDto passwordUpdateRequestDto) {
         Long id = signUser.getId();
         userService.updatePassword(id,passwordUpdateRequestDto);
