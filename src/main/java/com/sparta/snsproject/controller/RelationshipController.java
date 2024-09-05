@@ -9,6 +9,7 @@ import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class RelationshipController {
      * @return relationship 등록 정보
      */
     @PostMapping("/send")
-    public RelationshipResponseDto sendFriend(@Sign SignUser signUser, @RequestBody RelationshipSendRequestDto requestDto) {
-        return relationshipService.sendFriend(signUser, requestDto);
+    public ResponseEntity<RelationshipResponseDto> sendFriend(@Sign SignUser signUser, @RequestBody RelationshipSendRequestDto requestDto) {
+        return ResponseEntity.ok(relationshipService.sendFriend(signUser, requestDto));
     }
 
     /***
@@ -38,8 +39,8 @@ public class RelationshipController {
      * @return relationship 등록 정보
      */
     @PutMapping("/accept")
-    public RelationshipResponseDto acceptFriend(@Sign SignUser signUser, @RequestBody RelationshipAcceptRequestDto requestDto) {
-        return relationshipService.acceptFriend(signUser, requestDto);
+    public ResponseEntity<RelationshipResponseDto> acceptFriend(@Sign SignUser signUser, @RequestBody RelationshipAcceptRequestDto requestDto) {
+        return ResponseEntity.ok(relationshipService.acceptFriend(signUser, requestDto));
     }
 
     /***
@@ -48,8 +49,9 @@ public class RelationshipController {
      * @param requestDto : 삭제할 친구 아이디 정보
      */
     @DeleteMapping("/remove")
-    public void deletedFriend(@Sign SignUser signUser, @RequestBody FriendsDeleteRequestDto requestDto) {
+    public ResponseEntity deletedFriend(@Sign SignUser signUser, @RequestBody FriendsDeleteRequestDto requestDto) {
         relationshipService.deletedFriend(signUser, requestDto);
+        return ResponseEntity.noContent().build();  //204번 : body에 아무것도 넣지 못함
     }
     /***
      * 요청받은 입장에서 요청한 유저들 목록
@@ -58,8 +60,8 @@ public class RelationshipController {
      */
 
     @GetMapping("/sendFriendlist")
-    public List<UserSimpleResponseDto> sendFriendList(@Sign SignUser signUser) {
-        return relationshipService.sendFriendList(signUser);
+    public ResponseEntity<List<UserSimpleResponseDto>> sendFriendList(@Sign SignUser signUser) {
+        return ResponseEntity.ok(relationshipService.sendFriendList(signUser));
     }
 
 
@@ -69,8 +71,8 @@ public class RelationshipController {
      * @return 친구 오쳥 목록
      */
     @GetMapping("/receiveFriendlist")
-    public List<UserSimpleResponseDto> receiveFriendList(@Sign SignUser signUser) {
-        return relationshipService.receiveFriendList(signUser);
+    public ResponseEntity<List<UserSimpleResponseDto>> receiveFriendList(@Sign SignUser signUser) {
+        return ResponseEntity.ok(relationshipService.receiveFriendList(signUser));
     }
 
     /**
@@ -78,9 +80,10 @@ public class RelationshipController {
      * @param signUser : 나의 로그인 정보
      * @param requestDto  : 친구 요청받은 유저의 아이디 정보
      */
-    @PutMapping("/cancel")
-    public void cancelSend(@Sign SignUser signUser, @RequestBody RelationshipSendRequestDto requestDto) {
+    @DeleteMapping("/cancel")
+    public ResponseEntity cancelSend(@Sign SignUser signUser, @RequestBody RelationshipSendRequestDto requestDto) {
         relationshipService.cancelSend(signUser, requestDto);
+        return ResponseEntity.noContent().build(); //204번 : body에 아무것도 넣지 못함
     }
 
     /**
@@ -89,7 +92,7 @@ public class RelationshipController {
      * @return : 친구 목록
      */
     @GetMapping("/getfriends")
-    public List<UserSimpleResponseDto> getFriends(@Sign SignUser signUser) {
-        return relationshipService.getfriends(signUser);
+    public ResponseEntity<List<UserSimpleResponseDto>> getFriends(@Sign SignUser signUser) {
+        return ResponseEntity.ok(relationshipService.getfriends(signUser));
     }
 }
