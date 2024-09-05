@@ -7,6 +7,7 @@ import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Posting;
 import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.entity.UserStatusEnum;
 import com.sparta.snsproject.exception.NoSignedUserException;
 import com.sparta.snsproject.exception.NotFoundException;
 import com.sparta.snsproject.repository.FriendsRepository;
@@ -99,6 +100,7 @@ public class PostingService {
         //받아온 id에맞는 유저찾기
         User user = userRepository.findById(id).orElseThrow();
 
+        if(user.getUser_status().equals(UserStatusEnum.DISABLE)) throw new NoSignedUserException();
         //관계테이블에서 친구관계인 유저들 다 찾기
         List<Friends> friendsList = friendsRepository.findAllByFriendAId(user.getId());
 
