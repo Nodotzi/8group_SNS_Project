@@ -1,10 +1,15 @@
 package com.sparta.snsproject.service;
 
-import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.sign.SignoutDto;
+import com.sparta.snsproject.dto.sign.SignupRequestDto;
+import com.sparta.snsproject.dto.sign.SignupResponseDto;
+import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
+import com.sparta.snsproject.dto.user.UserRequestDto;
+import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
+import com.sparta.snsproject.exception.WrongPasswordException;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,13 +25,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final RelationshipService relationshipService;
 
     public SignupResponseDto createUser(SignupRequestDto requestDto) {
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        //User Entity의 email 설정이 unique라서 중복예외처리 생략
+        //User Entity의 email 중복예외처리
         Optional<User> existingUser = userRepository.findByEmail(requestDto.getEmail());
         if (existingUser.isPresent()) {
             throw new DuplicateEmailException();
@@ -45,13 +50,30 @@ public class UserService {
         return userRepository.findAll().stream().map(UserResponseDto::new).collect(Collectors.toList());
     } // 메서드 이름으로 SQL 생성하는 Query Methods 기능.
 
+    public Long updatePassword(Long id, PasswordUpdateRequestDto passwordUpdateRequestDto) {
+        // 해당 메모가 DB에 존재하는지 확인
+        User user = find(id);
+
+        //DB password = confirmpassword 확인
+        if(passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword())){
+            // user Password 수정
+            String encodedPassword = passwordEncoder.encode(passwordUpdateRequestDto.getNewPassword());
+            user.updatePassword(encodedPassword);
+        }
+        else{
+            throw new WrongPasswordException();
+        }
+
+        return id;
+    }
     public Long updateUser(Long id, UserRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
-        // schedule 내용 수정
+        // introduce, nickname 내용 수정
         user.update(requestDto);
 
         return id;
+
     }
 
     private User find(Long id) {
@@ -70,8 +92,9 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
+            relationshipService.SignoutUser(id);
             return id;
         }
-        else throw new IllegalArgumentException("비밀번호가 일치하지않습니다.");
+        else throw new WrongPasswordException();
     }
 }

@@ -2,8 +2,11 @@ package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
-import com.sparta.snsproject.dto.LoginRequestDto;
+import com.sparta.snsproject.dto.user.LoginRequestDto;
 import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.entity.UserStatusEnum;
+import com.sparta.snsproject.exception.NoSignedUserException;
+import com.sparta.snsproject.exception.WrongPasswordException;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,18 +20,22 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     public String login(LoginRequestDto requestDto) {
-        User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("가입되지 않은 유저입니다."));
+        User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(() -> new NoSignedUserException());
 
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+            throw new WrongPasswordException();
         }
 
-        String token = jwtUtil.createToken(
-                user.getId(),
-                user.getNickname(),
-                user.getEmail()
-        );
+        //탈퇴유저 로그인 방지
+        if(user.getUser_status().equals(UserStatusEnum.ABLE)) {
 
-        return token;
+            String token = jwtUtil.createToken(
+                    user.getId(),
+                    user.getNickname(),
+                    user.getEmail()
+            );
+            return token;
+        }
+        else throw new NoSignedUserException();
     }
 }
