@@ -31,8 +31,8 @@ public class GlobalExceptionHandler {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
-    @ExceptionHandler(ExistFrandsName.class)
-    public ApiResponse<?> handleExistFrandsNameException(ExistFrandsName e) {
+    @ExceptionHandler(ExistRelationshipException.class)
+    public ApiResponse<?> handleExistFrandsNameException(ExistRelationshipException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
@@ -48,6 +48,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NullPointerException.class)
     public ApiResponse<?> handleNullPointerException(NullPointerException e) {
+          return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+    }
+    @ExceptionHandler(NotFoundException.class)
+    public ApiResponse<?> handleNotFoundException(NotFoundException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
