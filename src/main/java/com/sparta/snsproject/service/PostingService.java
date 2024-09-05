@@ -53,8 +53,8 @@ public class PostingService {
     }
 
     //사용자의 모든 게시물을 조회
-    public List<PostingResponseDto> getPostings(SignUser signUser) {
-        List<Posting> postingList = postingRepository.findAllByUserId(signUser.getId());
+    public List<PostingResponseDto> getPostings(Long userId) {
+        List<Posting> postingList = postingRepository.findAllByUserId(userId);
 
         List<PostingResponseDto> dtoList = new ArrayList<>();
 
@@ -65,6 +65,8 @@ public class PostingService {
         }
         return dtoList;
     }
+
+
 
     //특정 게시물을 조회
     public PostingResponseDto getPosting(Long posting_id) {

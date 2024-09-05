@@ -25,8 +25,13 @@ public class PostingController {
 
     //사용자의 모든 게시물 조회
     @GetMapping("/api/postings")
-    public ResponseEntity<List<PostingResponseDto>> getPostings(@Sign SignUser signUser) {
-        return ResponseEntity.ok(postingService.getPostings(signUser));
+    public ResponseEntity<List<PostingResponseDto>> getMyPostings(@Sign SignUser signUser) {
+        return ResponseEntity.ok(postingService.getPostings(signUser.getId()));
+    }
+
+    @GetMapping("/api/{user_id}/postings")
+    public ResponseEntity<List<PostingResponseDto>> getUserPostings(@PathVariable("user_id") Long userId) {
+        return ResponseEntity.ok(postingService.getPostings(userId));
     }
 
     //특정 게시물 단건 조회
