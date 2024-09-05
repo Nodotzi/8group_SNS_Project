@@ -8,6 +8,7 @@ import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Posting;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.NoSignedUserException;
+import com.sparta.snsproject.exception.NotFoundException;
 import com.sparta.snsproject.repository.FriendsRepository;
 import com.sparta.snsproject.repository.PostingRepository;
 import com.sparta.snsproject.repository.UserRepository;
@@ -31,7 +32,7 @@ public class PostingService {
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
 
-
+    //새 게시물을 생성하고 저장
     @Transactional
     public PostingResponseDto savePosting(SignUser signUser, PostingRequestDto postingRequestDto) {
         User user = userRepository.findById(signUser.getId()).orElseThrow(()-> new NoSignedUserException());
@@ -51,6 +52,7 @@ public class PostingService {
         );
     }
 
+    //사용자의 모든 게시물을 조회
     public List<PostingResponseDto> getPostings(SignUser signUser) {
         List<Posting> postingList = postingRepository.findAllByUserId(signUser.getId());
 
@@ -64,8 +66,9 @@ public class PostingService {
         return dtoList;
     }
 
+    //특정 게시물을 조회
     public PostingResponseDto getPosting(Long posting_id) {
-        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NullPointerException("없음"));
+        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NotFoundException("게시물이 없습니다."));
         return new PostingResponseDto(
                 posting.getId(),
                 posting.getTitle(),
@@ -73,11 +76,10 @@ public class PostingService {
                 posting.getUser());
     }
 
-
-
+    //게시물을 업데이트
     @Transactional
     public PostingResponseDto updatePosting(Long posting_id, PostingRequestDto postingRequestDto) {
-        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NullPointerException("없음"));
+        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NotFoundException("게시물이 없습니다."));
         posting.update(postingRequestDto.getContents(), postingRequestDto.getTitle());
         postingRepository.save(posting);
         return new PostingResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),
@@ -85,6 +87,7 @@ public class PostingService {
         );
     }
 
+    //게시물 ID로 게시물을 삭제
     @Transactional
     public void deletePosting(Long posting_id){
         postingRepository.deleteById(posting_id);

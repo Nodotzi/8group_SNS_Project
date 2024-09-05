@@ -11,6 +11,9 @@ public class UserResponseDto {
     private final String email;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
+    private String introduce;
+    private String nickname;
+
 
     //리스트 만들기
 
@@ -21,6 +24,4 @@ public class UserResponseDto {
         this.createdAt = savedUser.getCreatedAt();
         this.modifiedAt = savedUser.getModifiedAt();
     }
-
-
 }
