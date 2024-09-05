@@ -29,12 +29,11 @@ public class AuthService {
         //탈퇴유저 로그인 방지
         if(user.getUser_status().equals(UserStatusEnum.ABLE)) {
 
-            String token = jwtUtil.createToken(
+            return jwtUtil.createToken(
                     user.getId(),
                     user.getNickname(),
                     user.getEmail()
             );
-            return token;
         }
         else throw new NoSignedUserException();
     }

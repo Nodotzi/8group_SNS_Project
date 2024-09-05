@@ -1,12 +1,15 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
+import com.sparta.snsproject.dto.NewsfeedRequestDto;
 import com.sparta.snsproject.dto.NewsfeedResponseDto;
 import com.sparta.snsproject.dto.SignUser;
 import com.sparta.snsproject.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,8 +19,9 @@ public class NewsfeedController {
     private final PostingService postingService;
 
     @GetMapping("/api/newsfeed")
-    public Page<NewsfeedResponseDto> getNewsfeed(@Sign SignUser signUser) {
+    public ResponseEntity<Page<NewsfeedResponseDto>> getNewsfeed(@Sign SignUser signUser, @RequestBody NewsfeedRequestDto requestDto) {
                 Long id = signUser.getId();
-        return postingService.getNewsfeed(id);
+                int page = requestDto.getPageNumber() - 1;
+        return ResponseEntity.ok(postingService.getNewsfeed(id,page));
     }
 }

@@ -15,13 +15,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RelationshipService relationshipService;
 
+    @Transactional
     public SignupResponseDto createUser(SignupRequestDto requestDto) {
 
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
@@ -65,13 +66,13 @@ public class UserService {
         UserResponseDto responseDto = new UserResponseDto(user);
         return responseDto;
     }
-    
-    public Long deleteUser(Long id, SignoutDto signoutDto) {
+
+    @Transactional
+    public void deleteUser(Long id, SignoutDto signoutDto) {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
             relationshipService.SignoutUser(id);
-            return id;
         }
         else throw new WrongPasswordException();
     }
