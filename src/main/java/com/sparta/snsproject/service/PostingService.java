@@ -8,7 +8,7 @@ import com.sparta.snsproject.entity.Friends;
 import com.sparta.snsproject.entity.Posting;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.NoSignedUserException;
-import com.sparta.snsproject.exception.PostingNotFoundException;
+import com.sparta.snsproject.exception.NotFoundException;
 import com.sparta.snsproject.repository.FriendsRepository;
 import com.sparta.snsproject.repository.PostingRepository;
 import com.sparta.snsproject.repository.UserRepository;
@@ -68,7 +68,7 @@ public class PostingService {
 
     //특정 게시물을 조회
     public PostingResponseDto getPosting(Long posting_id) {
-        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new PostingNotFoundException());
+        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NotFoundException("게시물이 없습니다."));
         return new PostingResponseDto(
                 posting.getId(),
                 posting.getTitle(),
@@ -79,7 +79,7 @@ public class PostingService {
     //게시물을 업데이트
     @Transactional
     public PostingResponseDto updatePosting(Long posting_id, PostingRequestDto postingRequestDto) {
-        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new PostingNotFoundException());
+        Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NotFoundException("게시물이 없습니다."));
         posting.update(postingRequestDto.getContents(), postingRequestDto.getTitle());
         postingRepository.save(posting);
         return new PostingResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),

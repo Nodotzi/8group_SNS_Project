@@ -3,7 +3,7 @@ package com.sparta.snsproject.controller;
 import com.sparta.snsproject.annotation.Sign;
 import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
-import com.sparta.snsproject.dto.user.UserRequestDto;
+import com.sparta.snsproject.dto.user.UserProfileRequestDto;
 import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.service.UserService;
 import jakarta.validation.Valid;
@@ -23,8 +23,8 @@ public class UserController {
         return userService.getUser(id);
     }
     //유저 사용자정보 수정
-    @PutMapping("/my/profile") //반환타입 메서드
-    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserRequestDto requestDto) {
+    @PutMapping("/my/profile/{id}") //반환타입 메서드
+    public UserResponseDto updateUser(@PathVariable Long id, @RequestBody UserProfileRequestDto requestDto) {
         return userService.getUser(userService.updateUser(id, requestDto));
     }
     //유저 비밀번호 수정

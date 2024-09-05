@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Table(name="relationship")
 @NoArgsConstructor
-public class Relationship {
+public class Relationship extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

@@ -5,6 +5,7 @@ import com.sparta.snsproject.dto.sign.SignoutDto;
 import com.sparta.snsproject.dto.sign.SignupRequestDto;
 import com.sparta.snsproject.dto.sign.SignupResponseDto;
 import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
+import com.sparta.snsproject.dto.user.UserProfileRequestDto;
 import com.sparta.snsproject.dto.user.UserRequestDto;
 import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.entity.User;
@@ -15,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -46,10 +45,8 @@ public class UserService {
         return new SignupResponseDto(savedUser);
     }
 
-    public List<UserResponseDto> getAllUser() {
-        return userRepository.findAll().stream().map(UserResponseDto::new).collect(Collectors.toList());
-    } // 메서드 이름으로 SQL 생성하는 Query Methods 기능.
-
+//  비밀번호 수정
+    //@Transactional
     public Long updatePassword(Long id, PasswordUpdateRequestDto passwordUpdateRequestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
@@ -66,14 +63,14 @@ public class UserService {
 
         return id;
     }
-    public Long updateUser(Long id, UserRequestDto requestDto) {
+
+    public Long updateUser(Long id, UserProfileRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
         // introduce, nickname 내용 수정
         user.update(requestDto);
 
         return id;
-
     }
 
     private User find(Long id) {
@@ -84,15 +81,16 @@ public class UserService {
 
     public UserResponseDto getUser(Long id) {
         User user = find(id);
-        UserResponseDto responseDto = new UserResponseDto(user);
-        return responseDto;
+        return new UserResponseDto(user);
     }
-    
+
+    //@Transactional
+    // 회원 탈퇴
     public Long deleteUser(Long id, SignoutDto signoutDto) {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
-            relationshipService.SignoutUser(id);
+            relationshipService.signoutUser(id);
             return id;
         }
         else throw new WrongPasswordException();
