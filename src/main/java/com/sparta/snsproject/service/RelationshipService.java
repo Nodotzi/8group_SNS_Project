@@ -37,6 +37,8 @@ public class RelationshipService {
         User send = findUser(signUser.getId());
         //요청 받은 유저 찾기
         User receive = findUser(requestDto.getReceive_id());
+        //이미 털톼한 유저에게는 요청을 보낼 수 없음
+        if(receive.getUser_status() == UserStatusEnum.DISABLE) throw new IllegalArgumentException("이미 탈퇴한 유저입니다.");
         //친구 요청을 나에게 할 수 없음
         if(Objects.equals(signUser.getId(), requestDto.getReceive_id())) throw new IllegalArgumentException("자신에게는 친구요청을 할 수 없습니다.");
         //이미 신청받아있다면 거부하고 수락해달라는 메세지 날림
