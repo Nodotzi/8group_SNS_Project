@@ -9,6 +9,7 @@ import com.sparta.snsproject.dto.user.UserProfileRequestDto;
 import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.dto.user.*;
 import com.sparta.snsproject.entity.User;
+import com.sparta.snsproject.exception.ChangeSamePasswordException;
 import com.sparta.snsproject.exception.DuplicateEmailException;
 import com.sparta.snsproject.exception.WrongPasswordException;
 import com.sparta.snsproject.repository.UserRepository;
@@ -46,22 +47,20 @@ public class UserService {
         return new SignupResponseDto(savedUser);
     }
 
-//  비밀번호 수정
-    //@Transactional
+    //  비밀번호 수정
+    @Transactional
     public Long updatePassword(Long id, PasswordUpdateRequestDto passwordUpdateRequestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
 
-        //DB password = confirmpassword 확인
-        if(passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword())){
-            // user Password 수정
-            String encodedPassword = passwordEncoder.encode(passwordUpdateRequestDto.getNewPassword());
-            user.updatePassword(encodedPassword);
-        }
-        else{
+        //DB password = confirmpassword 확인 //confirm과 newpass 같으면 안되는 예외처리
+        if (!passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword()))
             throw new WrongPasswordException();
-        }
-
+        if (passwordUpdateRequestDto.getConfirmPassword().equals(passwordUpdateRequestDto.getNewPassword()))
+            throw new ChangeSamePasswordException();
+        // user Password 수정
+        String encodedPassword = passwordEncoder.encode(passwordUpdateRequestDto.getNewPassword());
+        user.updatePassword(encodedPassword);
         return id;
     }
 
@@ -92,12 +91,11 @@ public class UserService {
         //id에 맞는 유저찾기
         User user = userRepository.findById(id).orElseThrow();
         //패스워드가 일치한다면
-        if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             //유저 status정보를 ABLE -> DISABLE로
             user.update();
             //탈퇴시 탈퇴유저과 관련된 친구관계, 친구요청 및 대기, 게시글 삭제
             relationshipService.signoutUser(id);
-        }
-        else throw new WrongPasswordException();
+        } else throw new WrongPasswordException();
     }
 }
