@@ -9,10 +9,9 @@ import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 //친구 요청, 수락, 삭제와 관련된 페이지
 @RestController
@@ -60,8 +59,10 @@ public class RelationshipController {
      */
 
     @GetMapping("/sendFriendlist")
-    public ResponseEntity<List<UserSimpleResponseDto>> sendFriendList(@Sign SignUser signUser) {
-        return ResponseEntity.ok(relationshipService.sendFriendList(signUser));
+    public ResponseEntity<Page<UserSimpleResponseDto>> sendFriendList(@Sign SignUser signUser,
+                                                                      @RequestParam(defaultValue = "1", required = false) int page,
+                                                                      @RequestParam(defaultValue = "10", required = false) int size) {
+        return ResponseEntity.ok(relationshipService.sendFriendList(signUser, page, size));
     }
 
 
@@ -71,8 +72,10 @@ public class RelationshipController {
      * @return 친구 오쳥 목록
      */
     @GetMapping("/receiveFriendlist")
-    public ResponseEntity<List<UserSimpleResponseDto>> receiveFriendList(@Sign SignUser signUser) {
-        return ResponseEntity.ok(relationshipService.receiveFriendList(signUser));
+    public ResponseEntity<Page<UserSimpleResponseDto>> receiveFriendList(@Sign SignUser signUser,
+                                                                         @RequestParam(defaultValue = "1", required = false) int page,
+                                                                         @RequestParam(defaultValue = "10", required = false) int size) {
+        return ResponseEntity.ok(relationshipService.receiveFriendList(signUser, page, size));
     }
 
     /**
@@ -92,7 +95,9 @@ public class RelationshipController {
      * @return : 친구 목록
      */
     @GetMapping("/getfriends")
-    public ResponseEntity<List<UserSimpleResponseDto>> getFriends(@Sign SignUser signUser) {
-        return ResponseEntity.ok(relationshipService.getfriends(signUser));
+    public ResponseEntity<Page<UserSimpleResponseDto>> getFriends(@Sign SignUser signUser,
+                                                                  @RequestParam(defaultValue = "1", required = false) int page,
+                                                                  @RequestParam(defaultValue = "10", required = false) int size) {
+        return ResponseEntity.ok(relationshipService.getfriends(signUser, page, size));
     }
 }
