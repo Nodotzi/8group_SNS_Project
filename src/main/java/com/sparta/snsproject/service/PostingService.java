@@ -14,8 +14,9 @@ import com.sparta.snsproject.repository.PostingRepository;
 import com.sparta.snsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,6 @@ public class PostingService {
     //새 게시물을 생성하고 저장
     @Transactional
     public PostingResponseDto savePosting(SignUser signUser, PostingRequestDto postingRequestDto) {
-
         User user = userRepository.findById(signUser.getId()).orElseThrow(()-> new NoSignedUserException());
         Posting newPosting = new Posting(
                 postingRequestDto.getTitle(),
@@ -93,24 +93,22 @@ public class PostingService {
         postingRepository.deleteById(posting_id);
     }
 
-    public Page<NewsfeedResponseDto> getNewsfeed(Long id) {
+    public Page<NewsfeedResponseDto> getNewsfeed(Long id, int pageNumber) {
+        //받아온 id에맞는 유저찾기
         User user = userRepository.findById(id).orElseThrow();
-        //중간테이블에서 친구관계인 유저들 다 찾기
+
+        //관계테이블에서 친구관계인 유저들 다 찾기
         List<Friends> friendsList = friendsRepository.findAllByFriendAId(user.getId());
+
         //찾은 유저들 리스트에 저장
         List<User> userlist = new ArrayList<>();
         for(Friends f:friendsList) {
             userlist.add(f.getFriendB());
         }
 
-        //찾은 각각 유저들의 포스팅을 리스트 한곳에 싹다 모으기
-        List<Posting> postingList = postingRepository.findAllByUserInOrderByCreatedAtDesc(userlist);
-
-        //리스트 -> 페이지네이션
-        PageRequest pageRequest = PageRequest.of(0, 10);
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), postingList.size());
-        Page<NewsfeedResponseDto> pages = new PageImpl<>(postingList.subList(start, end), pageRequest, postingList.size()).map(NewsfeedResponseDto::new);
-        return pages;
+        //페이지네이션
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
+        Page<Posting> pages = postingRepository.findAllByUserIn(userlist, pageable);
+        return pages.map(NewsfeedResponseDto::new);
     }
 }
