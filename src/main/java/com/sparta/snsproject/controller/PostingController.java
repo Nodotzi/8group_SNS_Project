@@ -46,7 +46,8 @@ public class PostingController {
 
     //게시물 삭제
     @DeleteMapping("/api/posting/{posting_id}")
-    public void deletePosting(@PathVariable Long posting_id) {
+    public ResponseEntity<Void> deletePosting(@PathVariable Long posting_id) {
         postingService.deletePosting(posting_id);
+        return ResponseEntity.noContent().build();
     }
 }

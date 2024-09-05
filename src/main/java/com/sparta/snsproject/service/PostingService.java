@@ -65,6 +65,7 @@ public class PostingService {
         }
         return dtoList;
     }
+
     //특정 게시물을 조회
     public PostingResponseDto getPosting(Long posting_id) {
         Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new PostingNotFoundException());
@@ -74,7 +75,6 @@ public class PostingService {
                 posting.getContents(),
                 posting.getUser());
     }
-
 
     //게시물을 업데이트
     @Transactional
@@ -86,6 +86,7 @@ public class PostingService {
                 posting.getUser()
         );
     }
+
     //게시물 ID로 게시물을 삭제
     @Transactional
     public void deletePosting(Long posting_id){
