@@ -1,8 +1,7 @@
 package com.sparta.snsproject.entity;
 
-import com.sparta.snsproject.dto.SignoutDto;
-import com.sparta.snsproject.dto.SignupRequestDto;
-import com.sparta.snsproject.dto.UserRequestDto;
+import com.sparta.snsproject.dto.sign.SignupRequestDto;
+import com.sparta.snsproject.dto.user.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +27,7 @@ public class User extends Timestamped{
     @Column(nullable = false, length = 100)
     private UserStatusEnum user_status = UserStatusEnum.ABLE;
 
-    @Column(nullable = false, length = 100)
+    @Column(unique = true, length = 100)
     private String nickname;
     @Column(length = 100)
     private String introduce;

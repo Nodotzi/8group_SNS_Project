@@ -1,7 +1,12 @@
 package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.config.PasswordEncoder;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.sign.SignoutDto;
+import com.sparta.snsproject.dto.sign.SignupRequestDto;
+import com.sparta.snsproject.dto.sign.SignupResponseDto;
+import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
+import com.sparta.snsproject.dto.user.UserRequestDto;
+import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
 import com.sparta.snsproject.exception.WrongPasswordException;

@@ -1,7 +1,10 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.sign.SignUser;
+import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
+import com.sparta.snsproject.dto.user.UserRequestDto;
+import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

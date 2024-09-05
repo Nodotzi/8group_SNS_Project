@@ -1,7 +1,12 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.friends.FriendsDeleteRequestDto;
+import com.sparta.snsproject.dto.relationship.RelationshipAcceptRequestDto;
+import com.sparta.snsproject.dto.relationship.RelationshipResponseDto;
+import com.sparta.snsproject.dto.relationship.RelationshipSendRequestDto;
+import com.sparta.snsproject.dto.sign.SignUser;
+import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

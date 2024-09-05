@@ -1,6 +1,6 @@
 package com.sparta.snsproject.controller;
 
-import com.sparta.snsproject.dto.LoginRequestDto;
+import com.sparta.snsproject.dto.user.LoginRequestDto;
 import com.sparta.snsproject.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
