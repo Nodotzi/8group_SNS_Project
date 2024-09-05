@@ -92,7 +92,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
-            relationshipService.SignoutUser(id);
+            relationshipService.signoutUser(id);
             return id;
         }
         else throw new WrongPasswordException();
