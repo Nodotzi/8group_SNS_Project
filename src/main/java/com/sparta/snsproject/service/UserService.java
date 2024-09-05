@@ -76,7 +76,7 @@ public class UserService {
 
     }
 
-    private User find(Long id) {
+    protected User find(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 유저는 존재하지 않습니다.")
         );

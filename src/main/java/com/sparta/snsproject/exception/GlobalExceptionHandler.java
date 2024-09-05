@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
     public ApiResponse<?> handleDuplicateEmailException(DuplicateEmailException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
-    @ExceptionHandler(ExistFrandsName.class)
-    public ApiResponse<?> handleExistFrandsNameException(ExistFrandsName e) {
+    @ExceptionHandler(ExistRelationshipException.class)
+    public ApiResponse<?> handleExistFrandsNameException(ExistRelationshipException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
     @ExceptionHandler(NoSignedUserException.class)
@@ -42,8 +42,8 @@ public class GlobalExceptionHandler {
     public ApiResponse<?> handleWrongPasswordException(WrongPasswordException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
-    @ExceptionHandler(NullPointerException.class)
-    public ApiResponse<?> handleNullPointerException(NullPointerException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ApiResponse<?> handleNotFoundException(NotFoundException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
     @ExceptionHandler(IllegalArgumentException.class)

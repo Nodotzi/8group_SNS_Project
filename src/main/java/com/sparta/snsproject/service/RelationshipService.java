@@ -5,7 +5,8 @@ import com.sparta.snsproject.dto.relationship.*;
 import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.dto.user.UserSimpleResponseDto;
 import com.sparta.snsproject.entity.*;
-import com.sparta.snsproject.exception.ExistFrandsName;
+import com.sparta.snsproject.exception.ExistRelationshipException;
+import com.sparta.snsproject.exception.NotFoundException;
 import com.sparta.snsproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,21 +24,27 @@ public class RelationshipService {
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
     private final PostingRepository postingRepository;
+    private final UserService userService;
 
 
     //친구 요청
     @Transactional
     public RelationshipResponseDto sendFriend(SignUser signUser, RelationshipSendRequestDto requestDto) {
         //요청한 유저 찾기
-        User send = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User send = userService.find(signUser.getId());
         //요청 받은 유저 찾기
-        User receive = userRepository.findById(requestDto.getReceive_id()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User receive = userService.find(requestDto.getReceive_id());
         //친구 요청을 나에게 할 수 없음
         if(Objects.equals(send.getId(), receive.getId())) throw new IllegalArgumentException("자신에게는 친구요청을 할 수 없습니다.");
         //이미 신청받아있다면 거부하고 수락해달라는 메세지 날림
-        Optional<Relationship> alreadyRelationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getReceive_id(), signUser.getId());
-        if (alreadyRelationship.isPresent()) {
-            throw new ExistFrandsName();
+        Optional<Relationship> alreadyReceiveRelationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getReceive_id(), signUser.getId());
+        if (alreadyReceiveRelationship.isPresent()) {
+            throw new ExistRelationshipException("이미 친구 요청받은 유저입니다. 수락해주세요.");
+        }
+        //이미 신청했다면 신청되었다고 메시지 날림
+        Optional<Relationship> alreadySendRelationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getReceive_id(), signUser.getId());
+        if (alreadySendRelationship.isPresent()) {
+            throw new ExistRelationshipException("이미 친구 요청한 유저입니다.");
         }
         //두 유저로 relationship객체 생성(상태는 자동으로 wait)
         Relationship relationship = new Relationship(send, receive);
@@ -51,14 +58,14 @@ public class RelationshipService {
     @Transactional
     public RelationshipResponseDto acceptFriend(SignUser signUser, RelationshipAcceptRequestDto requestDto) {
         //요청한 유저와 요청받은 유저의 아이디로 해당 relationship 찾기
-        Relationship relationship = relationshipRepository.findBySendIdAndReceiveId(requestDto.getSend_id(), signUser.getId()).orElseThrow(()->new NullPointerException("친구 요청한 기록이 없습니다"));
+        Relationship relationship = findRelationship(requestDto.getSend_id(), signUser.getId());
         //relatiohship 상태를 accept로 변경
         relationship.accept();
         //수정된 데이터 저장
         Relationship saveRelationship = relationshipRepository.save(relationship);
         //두 아이디로 두 유저 찾기
-        User send = userRepository.findById(requestDto.getSend_id()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
-        User receive = userRepository.findById(signUser.getId()).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다"));
+        User send = userService.find(requestDto.getSend_id());
+        User receive = userService.find(signUser.getId());
         //두 유저로 친구 객체 생성
         Friends friends = new Friends(send, receive);
         //친구 데이터 저장
@@ -78,13 +85,13 @@ public class RelationshipService {
         //둘중 누가 요청자인지 모르므로 둘다 번갈아 넣어서 해당 relationship 데이터 찾기
         Relationship relationship = relationshipRepository.findBySendIdAndReceiveId(friendAId, friendBId)
                 .orElseGet(()->relationshipRepository.findBySendIdAndReceiveId(friendBId,friendAId)
-                .orElseThrow(()-> new NullPointerException("친구 요청한 기록이 없습니다")));
+                .orElseThrow(()-> new NotFoundException("친구 요청한 기록이 없습니다")));
         //relationship의 해당 데이터 삭제
         relationshipRepository.delete(relationship);
         //두 아이디로 생성된 친구 데이터를 찾아 삭제(2개 생성했으므로 2개 다 삭제)
-        Friends friends = friendsRepository.findByFriendAIdAndFriendBId(friendAId, friendBId).orElseThrow(()->new NullPointerException("해당하는 친구가 존재하지 않습니다"));
+        Friends friends = friendsRepository.findByFriendAIdAndFriendBId(friendAId, friendBId).orElseThrow(()->new NotFoundException("해당하는 친구가 존재하지 않습니다"));
         friendsRepository.delete(friends);
-        friends =friendsRepository.findByFriendAIdAndFriendBId(friendBId, friendAId).orElseThrow(()->new NullPointerException("해당하는 친구가 존재하지 않습니다"));
+        friends =friendsRepository.findByFriendAIdAndFriendBId(friendBId, friendAId).orElseThrow(()->new NotFoundException("해당하는 친구가 존재하지 않습니다"));
         friendsRepository.delete(friends);
     }
 
@@ -113,7 +120,7 @@ public class RelationshipService {
     @Transactional
     public void cancelSend(SignUser signUser, RelationshipSendRequestDto requestDto) {
         //나와 친구 신청된 유저의 아이디로 해당 relationship 객체 찾기
-        Relationship relationship = relationshipRepository.findBySendIdAndReceiveId(signUser.getId(), requestDto.getReceive_id()).orElseThrow(()->new NullPointerException("친구신청한 기록이 없습니다."));
+        Relationship relationship = findRelationship(signUser.getId(), requestDto.getReceive_id());
         //데이터 삭제
         relationshipRepository.delete(relationship);
     }
@@ -131,7 +138,7 @@ public class RelationshipService {
     @Transactional
     public void signoutUser(Long userId) {
         //user객체가 있는지 확인
-        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다."));
+        userRepository.findById(userId).orElseThrow(()-> new NotFoundException("해당하는 아이디의 유저가 존재하지 않습니다."));
         //이 유저가 친구 요창한 기록이 있으면 모두 삭제
         List<Relationship> relationships = relationshipRepository.findAllBySendId(userId);
         relationshipRepository.deleteAll(relationships);
@@ -143,5 +150,9 @@ public class RelationshipService {
         //이 유저의 게시물 모두 삭제
         List<Posting> postingList = postingRepository.findAllByUserId(userId);
         postingRepository.deleteAll(postingList);
+    }
+
+    private Relationship findRelationship(Long sendId, Long receiveId) {
+        return relationshipRepository.findBySendIdAndReceiveId(sendId, receiveId).orElseThrow(()->new NotFoundException("친구 요청한 기록이 없습니다"));
     }
 }
