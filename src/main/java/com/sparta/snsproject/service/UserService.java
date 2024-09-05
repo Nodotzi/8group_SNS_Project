@@ -4,10 +4,7 @@ import com.sparta.snsproject.config.PasswordEncoder;
 import com.sparta.snsproject.dto.sign.SignoutDto;
 import com.sparta.snsproject.dto.sign.SignupRequestDto;
 import com.sparta.snsproject.dto.sign.SignupResponseDto;
-import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
-import com.sparta.snsproject.dto.user.UserProfileRequestDto;
-import com.sparta.snsproject.dto.user.UserRequestDto;
-import com.sparta.snsproject.dto.user.UserResponseDto;
+import com.sparta.snsproject.dto.user.*;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
 import com.sparta.snsproject.exception.WrongPasswordException;
@@ -64,13 +61,15 @@ public class UserService {
         return id;
     }
 
-    public Long updateUser(Long id, UserProfileRequestDto requestDto) {
+    public UserProfileResponseDto updateUser(Long id, UserProfileRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
         // introduce, nickname 내용 수정
         user.update(requestDto);
+        // 사용자 정보 업데이트
+        //userService.updateUser(signUser.getId(), requestDto);
 
-        return id;
+        return new UserProfileResponseDto(user);
     }
 
     private User find(Long id) {
