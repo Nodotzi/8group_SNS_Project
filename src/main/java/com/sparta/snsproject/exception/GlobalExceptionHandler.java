@@ -50,6 +50,10 @@ public class GlobalExceptionHandler {
     public ApiResponse<?> handleIllegalArgumentException(IllegalArgumentException e) {
         return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
+    @ExceptionHandler(PostingNotFoundException.class)
+    public ApiResponse<?> handleIllegalArgumentException(PostingNotFoundException e) {
+        return ApiResponse.createError(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
