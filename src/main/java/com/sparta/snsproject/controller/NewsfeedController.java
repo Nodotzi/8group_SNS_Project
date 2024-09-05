@@ -18,6 +18,12 @@ public class NewsfeedController {
 
     private final PostingService postingService;
 
+    /***
+     * 뉴스피드 보기
+     * @param signUser : 나의 로그인 정보
+     * @param requestDto : 조회할 페이지 숫자
+     * @return 친구로 등록된 다수 User의 Posting 조회
+     */
     @GetMapping("/api/newsfeed")
     public ResponseEntity<Page<NewsfeedResponseDto>> getNewsfeed(@Sign SignUser signUser, @RequestBody NewsfeedRequestDto requestDto) {
                 Long id = signUser.getId();

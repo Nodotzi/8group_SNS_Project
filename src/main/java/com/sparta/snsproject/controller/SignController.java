@@ -20,11 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignController {
     private final UserService userService;
 
+    /***
+     * 회원가입
+     * @param signupRequestDto : 가입에 필요한 이메일, 비밀번호, 닉네임
+     * @return 코드 201
+     */
     @PostMapping("/api/signup")
     public ResponseEntity<SignupResponseDto> createUser(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(signupRequestDto));
     }
 
+    /***
+     * 회원탈퇴
+     * @param signUser : 로그인 정보
+     * @param signoutDto : 탈퇴시 본인확인용 비밀번호
+     * @return 코드 204
+     */
     @DeleteMapping("/api/signout")
     public ResponseEntity<Long> deleteUser(@Sign SignUser signUser, @RequestBody SignoutDto signoutDto) {
         Long id = signUser.getId();

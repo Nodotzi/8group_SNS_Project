@@ -91,14 +91,19 @@ public class PostingService {
     }
 
     public Page<NewsfeedResponseDto> getNewsfeed(Long id, int pageNumber) {
+        //받아온 id에맞는 유저찾기
         User user = userRepository.findById(id).orElseThrow();
-        //중간테이블에서 친구관계인 유저들 다 찾기
+
+        //관계테이블에서 친구관계인 유저들 다 찾기
         List<Friends> friendsList = friendsRepository.findAllByFriendAId(user.getId());
+
         //찾은 유저들 리스트에 저장
         List<User> userlist = new ArrayList<>();
         for(Friends f:friendsList) {
             userlist.add(f.getFriendB());
         }
+
+        //페이지네이션
         Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
         Page<Posting> pages = postingRepository.findAllByUserIn(userlist, pageable);
         return pages.map(NewsfeedResponseDto::new);

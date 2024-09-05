@@ -86,9 +86,13 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long id, SignoutDto signoutDto) {
+        //id에 맞는 유저찾기
         User user = userRepository.findById(id).orElseThrow();
+        //패스워드가 일치한다면
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
+            //유저 status정보를 ABLE -> DISABLE로
             user.update();
+            //탈퇴시 탈퇴유저과 관련된 친구관계, 친구요청 및 대기, 게시글 삭제
             relationshipService.signoutUser(id);
         }
         else throw new WrongPasswordException();

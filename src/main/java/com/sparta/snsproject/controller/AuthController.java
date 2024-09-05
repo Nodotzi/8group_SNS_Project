@@ -19,6 +19,12 @@ public class AuthController {
         this.authService = authService;
     }
 
+    /***
+     * 로그인
+     * @param requestDto : 로그인할 이메일과 비밀번호
+     * @return JWT토큰 헤더로 반환
+     */
+
     @PostMapping("/auth/login")
     public ResponseEntity<Object> loginResponseDto(@Valid @RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.OK).header("Authorization",authService.login(requestDto)).build();
