@@ -129,7 +129,7 @@ public class RelationshipService {
 
     //회원 탈퇴시 게시물, 친구 요청 기록, 친구목록 삭제
     @Transactional
-    public void SignoutUser(Long userId) {
+    public void signoutUser(Long userId) {
         //user객체가 있는지 확인
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("해당하는 아이디의 유저가 존재하지 않습니다."));
         //이 유저가 친구 요창한 기록이 있으면 모두 삭제
