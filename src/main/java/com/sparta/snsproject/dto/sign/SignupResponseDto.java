@@ -1,4 +1,4 @@
-package com.sparta.snsproject.dto;
+package com.sparta.snsproject.dto.sign;
 
 import com.sparta.snsproject.entity.User;
 import lombok.Getter;

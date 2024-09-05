@@ -1,4 +1,4 @@
-package com.sparta.snsproject.dto;
+package com.sparta.snsproject.dto.posting;
 
 import com.sparta.snsproject.entity.Posting;
 import lombok.Getter;

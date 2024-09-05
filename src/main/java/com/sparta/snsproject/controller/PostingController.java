@@ -1,7 +1,9 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.posting.PostingRequestDto;
+import com.sparta.snsproject.dto.posting.PostingResponseDto;
+import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.service.PostingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

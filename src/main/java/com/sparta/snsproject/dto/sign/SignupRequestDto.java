@@ -1,4 +1,4 @@
-package com.sparta.snsproject.dto;
+package com.sparta.snsproject.dto.sign;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,12 @@
 package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.config.PasswordEncoder;
-import com.sparta.snsproject.dto.*;
+import com.sparta.snsproject.dto.sign.SignoutDto;
+import com.sparta.snsproject.dto.sign.SignupRequestDto;
+import com.sparta.snsproject.dto.sign.SignupResponseDto;
+import com.sparta.snsproject.dto.user.PasswordUpdateRequestDto;
+import com.sparta.snsproject.dto.user.UserProfileRequestDto;
+import com.sparta.snsproject.dto.user.UserResponseDto;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.exception.DuplicateEmailException;
 import com.sparta.snsproject.exception.WrongPasswordException;
@@ -10,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,14 +45,29 @@ public class UserService {
         return new SignupResponseDto(savedUser);
     }
 
-    public List<UserResponseDto> getAllUser() {
-        return userRepository.findAll().stream().map(UserResponseDto::new).collect(Collectors.toList());
-    } // 메서드 이름으로 SQL 생성하는 Query Methods 기능.
-
-    public Long updateUser(Long id, UserRequestDto requestDto) {
+//  비밀번호 수정
+    //@Transactional
+    public Long updatePassword(Long id, PasswordUpdateRequestDto passwordUpdateRequestDto) {
         // 해당 메모가 DB에 존재하는지 확인
         User user = find(id);
-        // schedule 내용 수정
+
+        //DB password = confirmpassword 확인
+        if(passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword())){
+            // user Password 수정
+            String encodedPassword = passwordEncoder.encode(passwordUpdateRequestDto.getNewPassword());
+            user.updatePassword(encodedPassword);
+        }
+        else{
+            throw new WrongPasswordException();
+        }
+
+        return id;
+    }
+
+    public Long updateUser(Long id, UserProfileRequestDto requestDto) {
+        // 해당 메모가 DB에 존재하는지 확인
+        User user = find(id);
+        // introduce, nickname 내용 수정
         user.update(requestDto);
 
         return id;
@@ -63,8 +81,7 @@ public class UserService {
 
     public UserResponseDto getUser(Long id) {
         User user = find(id);
-        UserResponseDto responseDto = new UserResponseDto(user);
-        return responseDto;
+        return new UserResponseDto(user);
     }
 
     @Transactional
@@ -72,7 +89,7 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow();
         if(passwordEncoder.matches(signoutDto.getPassword(), user.getPassword())) {
             user.update();
-            relationshipService.SignoutUser(id);
+            relationshipService.signoutUser(id);
         }
         else throw new WrongPasswordException();
     }

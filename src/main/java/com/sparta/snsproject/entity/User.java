@@ -1,7 +1,8 @@
 package com.sparta.snsproject.entity;
 
-import com.sparta.snsproject.dto.SignupRequestDto;
-import com.sparta.snsproject.dto.UserRequestDto;
+import com.sparta.snsproject.dto.sign.SignupRequestDto;
+import com.sparta.snsproject.dto.user.UserProfileRequestDto;
+import com.sparta.snsproject.dto.user.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,7 @@ public class User extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
-    @Column(nullable = false, length = 100)
+    @Column(unique = true, length = 100)
     private String email;
     @Column(nullable = false, length = 100)
     private String password;
@@ -29,7 +28,7 @@ public class User extends Timestamped{
     @Column(nullable = false, length = 100)
     private UserStatusEnum user_status = UserStatusEnum.ABLE;
 
-    @Column(nullable = false, length = 100)
+    @Column(unique = true, length = 100)
     private String nickname;
     @Column(length = 100)
     private String introduce;
@@ -54,11 +53,14 @@ public class User extends Timestamped{
         this.nickname = requestDto.getNickname();
         this.introduce = requestDto.getIntroduce();
     }
-    public void update(UserRequestDto requestDto){
-        this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
-    }
 
+    public void update(UserProfileRequestDto requestDto) {
+        this.nickname = requestDto.getNewNickname();
+        this.introduce = requestDto.getNewIntroduce();
+    }
+    public void updatePassword(String password){
+        this.password = password;
+    }
     public void update() {
         this.user_status = UserStatusEnum.DISABLE;
     }

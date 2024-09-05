@@ -1,5 +1,6 @@
-package com.sparta.snsproject.dto;
+package com.sparta.snsproject.dto.posting;
 
+import com.sparta.snsproject.dto.user.UserNicknameResponseDto;
 import com.sparta.snsproject.entity.User;
 import lombok.Getter;
 

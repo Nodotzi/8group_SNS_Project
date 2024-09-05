@@ -2,7 +2,7 @@ package com.sparta.snsproject.service;
 
 import com.sparta.snsproject.config.JwtUtil;
 import com.sparta.snsproject.config.PasswordEncoder;
-import com.sparta.snsproject.dto.LoginRequestDto;
+import com.sparta.snsproject.dto.user.LoginRequestDto;
 import com.sparta.snsproject.entity.User;
 import com.sparta.snsproject.entity.UserStatusEnum;
 import com.sparta.snsproject.exception.NoSignedUserException;
