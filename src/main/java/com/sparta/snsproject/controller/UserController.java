@@ -36,6 +36,7 @@ public class UserController {
     @PostMapping("/my/password")
     public ResponseEntity<String> updatePassword(@Sign SignUser signUser, @Valid @RequestBody PasswordUpdateRequestDto passwordUpdateRequestDto) {
         Long id = signUser.getId();
+        userService.updatePassword(id,passwordUpdateRequestDto);
         return ResponseEntity.ok("암호가 정상적으로 변겅되었습니다.");
     }
 
