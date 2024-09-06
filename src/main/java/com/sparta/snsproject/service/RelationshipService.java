@@ -28,15 +28,16 @@ public class RelationshipService {
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
     private final PostingRepository postingRepository;
+    private final CommonService commonService;
 
 
     //친구 요청
     @Transactional
     public RelationshipResponseDto sendFriend(SignUser signUser, RelationshipSendRequestDto requestDto) {
         //요청한 유저 찾기
-        User send = findUser(signUser.getId());
+        User send = commonService.findUser(signUser.getId());
         //요청 받은 유저 찾기
-        User receive = findUser(requestDto.getReceive_id());
+        User receive = commonService.findUser(requestDto.getReceive_id());
         //이미 털톼한 유저에게는 요청을 보낼 수 없음
         if(receive.getUser_status() == UserStatusEnum.DISABLE) throw new IllegalArgumentException("이미 탈퇴한 유저입니다.");
         //친구 요청을 나에게 할 수 없음
@@ -69,8 +70,8 @@ public class RelationshipService {
         //수정된 데이터 저장
         Relationship saveRelationship = relationshipRepository.save(relationship);
         //두 아이디로 두 유저 찾기
-        User send = findUser(requestDto.getSend_id());
-        User receive = findUser(signUser.getId());
+        User send = commonService.findUser(requestDto.getSend_id());
+        User receive = commonService.findUser(signUser.getId());
         //두 유저로 친구 객체 생성
         Friends friends = new Friends(send, receive);
         //친구 데이터 저장
@@ -169,7 +170,4 @@ public class RelationshipService {
         return relationshipRepository.findBySendIdAndReceiveId(sendId, receiveId).orElseThrow(()->new NotFoundException("친구 요청한 기록이 없습니다"));
     }
 
-    private User findUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(()-> new NotFoundException("해당하는 아이디의 유저가 존재하지 않습니다."));
-    }
 }
