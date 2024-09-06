@@ -156,57 +156,37 @@
 
 ### [컬럼설명]
 **user (사용자):사용자 정보를 저장합니다.**
-**필드: 
-`id` (기본 키)
-`email`(이메일)
-`password`(비밀번호)
-`user_status`(활성화 상태)
-`nickname`(닉네임)
-`introduce`(자기소개)**
+**<필드>**
+
+    **`id` (기본 키), `email`(이메일), `password`(비밀번호), `user_status`(활성화 상태), `nickname`(닉네임), `introduce`(자기소개)**
 
 
 **posting (게시물):사용자가 작성한 게시물 정보를 저장합니다.**
 
-
-필드: 
+**<필드>** 
     
-    `id`(기본 키), title(제목), contents(내용), `created_at` (생성일자), `modified_at` (수정일자)
+    **`id`(기본 키), 'title'(제목), 'contents'(내용), `created_at`(생성일자), `modified_at` (수정일자)**
 
 
 **relationship(친구요청) : 친구 요청 기록을 저장합니다.**
 
+**<필드>** 
 
-**필드 :** 
-
-**`id`(기본 키)
-
-
-`status`  (요청상태)
-
-
-`created_at` (생성일자)
-
-
-`modified_at` (수정일자)
-
-
-`send_id`(보낸 유저, FK)
-
-
-`receive_id` (받은 유저, FK)**
+    **`id`(기본 키), `status`(요청상태), `created_at'(생성일자), `modified_at`(수정일자), `send_id`(보낸 유저, FK), `receive_id` (받은 유저, FK)**
 
 
 **friends (친구 관계):사용자 간의 친구 관계를 저장합니다.**
-**필드: `id`
-`friendA_id` (친구1, FK)
-`friendB_id` (친구2, FK)**
+
+**<필드>**  
+    
+    **`id`(기본 키), `friendA_id`(친구1, FK), `friendB_id`(친구2, FK)**
 
 
 **comment(댓글):댓글 정보를 저장합니다.**
-**필드 : `id` (기본키)
-`content`(댓글 내용)
-`posting_id`(게시물, FK)
-`user_id`(작성자, FK)**
+
+**<필드>**  
+    
+    `id`(기본키), `content`(댓글 내용), `posting_id`(게시물, FK), `user_id`(작성자, FK)**
 
 
 
