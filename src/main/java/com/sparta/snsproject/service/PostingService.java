@@ -81,8 +81,13 @@ public class PostingService {
 
     //게시물을 업데이트
     @Transactional
-    public PostingResponseDto updatePosting(Long posting_id, PostingRequestDto postingRequestDto) {
+    public PostingResponseDto updatePosting(Long posting_id, PostingRequestDto postingRequestDto, SignUser signUser) {
         Posting posting = postingRepository.findById(posting_id).orElseThrow(() -> new NotFoundException("게시물이 없습니다."));
+
+        // 게시물 작성자와 현재 사용자가 같은지 확인
+        if (posting.getUser().getId() == signUser.getId()) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
         posting.update(postingRequestDto.getContents(), postingRequestDto.getTitle());
         postingRepository.save(posting);
         return new PostingResponseDto(posting.getId(), posting.getTitle(), posting.getContents(),
@@ -91,10 +96,18 @@ public class PostingService {
     }
 
     //게시물 ID로 게시물을 삭제
-    @Transactional
-    public void deletePosting(Long posting_id){
-        postingRepository.deleteById(posting_id);
-    }
+        public void deletePosting(Long posting_id, SignUser signUser) {
+            Posting posting = postingRepository.findById(posting_id)
+                    .orElseThrow(() -> new NotFoundException("게시물이 없습니다."));
+
+            // 게시물 작성자와 현재 사용자가 같은지 확인
+
+            if (posting.getUser().getId() == signUser.getId()) {
+                throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            }
+            // 삭제 작업
+            postingRepository.deleteById(posting_id);
+        }
 
     public Page<NewsfeedResponseDto> getNewsfeed(Long id, int pageNumber) {
         //받아온 id에맞는 유저찾기
