@@ -28,6 +28,7 @@ public class RelationshipService {
     private final UserRepository userRepository;
     private final FriendsRepository friendsRepository;
     private final PostingRepository postingRepository;
+    private final CommentRepository commentRepository;
     private final CommonService commonService;
 
 
@@ -164,6 +165,9 @@ public class RelationshipService {
         //이 유저의 게시물 모두 삭제
         List<Posting> postingList = postingRepository.findAllByUserId(userId);
         postingRepository.deleteAll(postingList);
+        //이 유저의 댓글 모두 삭제
+        List<Comment> commentList = commentRepository.findAllByUserId(userId);
+        commentRepository.deleteAll(commentList);
     }
 
     private Relationship findRelationship(Long sendId, Long receiveId) {
