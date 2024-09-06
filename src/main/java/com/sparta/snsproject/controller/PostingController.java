@@ -23,12 +23,13 @@ public class PostingController {
         return ResponseEntity.ok(postingService.savePosting(signUser, postingRequestDto));
     }
 
-    //사용자의 모든 게시물 조회
+    //나의 게시물 다건 조회
     @GetMapping("/api/postings")
     public ResponseEntity<List<PostingResponseDto>> getMyPostings(@Sign SignUser signUser) {
         return ResponseEntity.ok(postingService.getPostings(signUser.getId()));
     }
 
+    //사용자 게시물 다건 조회
     @GetMapping("/api/{user_id}/postings")
     public ResponseEntity<List<PostingResponseDto>> getUserPostings(@PathVariable("user_id") Long userId) {
         return ResponseEntity.ok(postingService.getPostings(userId));
