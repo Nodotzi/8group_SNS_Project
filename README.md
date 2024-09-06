@@ -123,7 +123,9 @@
 
 ## 와이어프레임
 ![image](https://github.com/user-attachments/assets/025d7a1c-86ae-43af-8cd0-793f2d2780bb)
-![8조 와이어프레임](https://github.com/user-attachments/assets/982730f0-c622-4429-9d18-62c27b0aa0c5)
+## 플로우차트
+![8조 플로우 차트](https://github.com/user-attachments/assets/dfa29a18-8bd0-4c5f-93b1-1e3b3f14894b)
+
 
 
 
