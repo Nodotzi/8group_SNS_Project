@@ -1,7 +1,7 @@
 ## <aside>🏁 **Goal:  "JWT 토큰을 활용한 SNS 뉴스피드 기능 만들기"**</aside>
 
 
--  8group_SNS_Project를 통해 얻을 수 있는 것 👍
+### SNS_Project를 통해 얻을 수 있는 것 👍
 1.  **데이터베이스와 ORM**
     - [ ]  데이터베이스 스키마를 설계할 수 있다.
     - [ ]  JPA를 이용해 데이터베이스와 연동할 수 있다.
@@ -17,8 +17,8 @@
     - [ ]  Git branch를 이용하여 브랜치 관리 및 원활한 협업을 할 수 있다.
     - [ ]  Pull Request와 코드 리뷰 과정에 대해 이해할 수 있다.
 
-<aside> 🔥 **다음을 고려하며 설계했습니다.** </aside>
 
+<aside> 🔥 **다음을 고려하며 설계했습니다.** 🔥</aside>
 
 ### **1. 프로필 관리**
 
@@ -111,23 +111,25 @@
         - 친구는 상대방의 수락 기능이 필요합니다. 만약 어렵다면, 관심 유저를 팔로우하는 기능으로 개발하셔도 좋습니다.
   
 
-### **댓글**
+### **5. 댓글 관리**
 
 - 댓글 작성, 조회, 수정, 삭제
     - 사용자는 게시물에 댓글을 작성할 수 있고, 본인의 댓글은 **수정 및 삭제**를 할 수 있습니다.
     - **내용**만 수정이 가능합니다.
     - 댓글 수정, 삭제는 댓글의 작성자 혹은 게시글의 작성자만 가능합니다.
+ 
+
 - 댓글 수정, 삭제는 댓글의 작성자 혹은 게시글의 작성자만 가능합니다.
 
 
 
-## API명세서 
-#### 회원가입/탈퇴 API, 로그인 API, 뉴스피드 API (박대현)
+## ⚜API명세서 
+### 회원가입/탈퇴 API, 로그인 API, 뉴스피드 API (박대현)
 ![image](https://github.com/user-attachments/assets/5b6455d9-6588-4306-8fc4-c57445ea3fb7)
 ![image](https://github.com/user-attachments/assets/10b0bedd-61b2-457c-ab68-a568591462ed)
 
 
-    ### 친구요청 관련 API (김진비)
+### 친구요청 관련 API (김진비)
 ![image](https://github.com/user-attachments/assets/745eb8a4-debb-4eb0-9727-fc94ac223153)
 ![image](https://github.com/user-attachments/assets/5b2cb6cb-7595-45c6-b32a-a6e46af568cf)
 ![image](https://github.com/user-attachments/assets/72072768-df00-4c83-8eb6-5562327c937a)
@@ -164,20 +166,33 @@
 
 
 **posting (게시물):사용자가 작성한 게시물 정보를 저장합니다.**
-**필드: 
-`id`(기본 키)
-title(제목)
-contents(내용)
-`created_at` (생성일자)
-`modified_at` (수정일자)** 
+
+
+필드: 
+    
+    `id`(기본 키), title(제목), contents(내용), `created_at` (생성일자), `modified_at` (수정일자)
 
 
 **relationship(친구요청) : 친구 요청 기록을 저장합니다.**
-**필드 :** **`id`(기본 키)
+
+
+**필드 :** 
+
+**`id`(기본 키)
+
+
 `status`  (요청상태)
+
+
 `created_at` (생성일자)
+
+
 `modified_at` (수정일자)
+
+
 `send_id`(보낸 유저, FK)
+
+
 `receive_id` (받은 유저, FK)**
 
 
