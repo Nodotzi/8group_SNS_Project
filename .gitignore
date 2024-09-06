@@ -35,3 +35,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+## MAC ##
+.DS_Store
+src/.DS_Store
+src/main/.DS_Store
+
+## application.properties ##
+src/main/**/resources/application.properties
