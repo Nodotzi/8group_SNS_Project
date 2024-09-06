@@ -1,8 +1,9 @@
 package com.sparta.snsproject.controller;
 
 import com.sparta.snsproject.annotation.Sign;
-import com.sparta.snsproject.dto.comment.CommentRequestDto;
+import com.sparta.snsproject.dto.comment.CommentCreateRequestDto;
 import com.sparta.snsproject.dto.comment.CommentResponseDto;
+import com.sparta.snsproject.dto.comment.CommentUpdateRequestDto;
 import com.sparta.snsproject.dto.sign.SignUser;
 import com.sparta.snsproject.service.CommentService;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(@Sign SignUser signUser,@Valid @RequestBody CommentRequestDto requestDto) {
+    public ResponseEntity<CommentResponseDto> createComment(@Sign SignUser signUser,@Valid @RequestBody CommentCreateRequestDto requestDto) {
         return ResponseEntity.ok(commentService.createComment(signUser, requestDto));
     }
 
@@ -43,7 +44,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(@Sign SignUser signUser, @PathVariable Long commentId, @Valid @RequestBody CommentRequestDto requestDto) {
+    public ResponseEntity<CommentResponseDto> updateComment(@Sign SignUser signUser, @PathVariable Long commentId, @Valid @RequestBody CommentUpdateRequestDto requestDto) {
         return ResponseEntity.ok(commentService.updateComment(signUser, commentId, requestDto));
     }
 
