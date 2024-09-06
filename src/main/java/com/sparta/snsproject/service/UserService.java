@@ -26,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RelationshipService relationshipService;
-
+    private final CommonService commonService;
     @Transactional
     public SignupResponseDto createUser(SignupRequestDto requestDto) {
 
@@ -51,7 +51,7 @@ public class UserService {
     @Transactional
     public Long updatePassword(Long id, PasswordUpdateRequestDto passwordUpdateRequestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        User user = find(id);
+        User user = commonService.findUser(id);
 
         //DB password = confirmpassword 확인 //confirm과 newpass 같으면 안되는 예외처리
         if (!passwordEncoder.matches(passwordUpdateRequestDto.getConfirmPassword(), user.getPassword()))
@@ -67,7 +67,7 @@ public class UserService {
     @Transactional
     public UserProfileResponseDto updateUser(Long id, UserProfileRequestDto requestDto) {
         // 해당 메모가 DB에 존재하는지 확인
-        User user = find(id);
+        User user = commonService.findUser(id);
         // introduce, nickname 내용 수정
         user.update(requestDto);
         // 사용자 정보 업데이트
@@ -76,14 +76,9 @@ public class UserService {
         return new UserProfileResponseDto(user);
     }
 
-    private User find(Long id) {
-        return userRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("선택한 유저는 존재하지 않습니다.")
-        );
-    }
 
     public UserResponseDto getUser(Long id) {
-        User user = find(id);
+        User user = commonService.findUser(id);
         return new UserResponseDto(user);
     }
 
