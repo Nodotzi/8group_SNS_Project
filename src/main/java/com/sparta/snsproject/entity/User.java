@@ -2,13 +2,9 @@ package com.sparta.snsproject.entity;
 
 import com.sparta.snsproject.dto.sign.SignupRequestDto;
 import com.sparta.snsproject.dto.user.UserProfileRequestDto;
-import com.sparta.snsproject.dto.user.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Entity
@@ -32,20 +28,6 @@ public class User extends Timestamped{
     private String nickname;
     @Column(length = 100)
     private String introduce;
-
-    @OneToMany(mappedBy = "send", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Relationship> sends = new ArrayList<>();
-
-    @OneToMany(mappedBy = "receive", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Relationship> receives = new ArrayList<>();
-
-    @OneToMany(mappedBy = "friendB",cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Friends> friendBs = new ArrayList<>();
-
-
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<Posting> postingList = new ArrayList<>();
 
     public User(SignupRequestDto requestDto, String password) {
         this.email = requestDto.getEmail();
